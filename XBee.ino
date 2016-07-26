@@ -10,7 +10,7 @@ void acknowledge() {
 String lastCommand = "";
 unsigned long commandTime = 0;
 
-void xBeeCommand() {
+void xBeeCommand(){
   boolean complete = false;
   String command = "";
   char inChar;
@@ -46,6 +46,119 @@ void xBeeCommand() {
       eventlog.println("Flight Clock Reset  -1");
       flightStart = millis();
       break;
+    case 01:
+        //Open Vent indefinitely
+        eventlog.println("Open Vent  01");
+        openVent(); //NEEDS TO BE WRITTEN as of 7/26
+        break;
+    
+     case 00:
+        //Close vent indefinitely
+        eventlog.println("Close Vent  00");
+        closeVent()  //NEEDS TO BE WRITTEN as of 7/26
+        break;
+        
+     case 10:                                   //HELP ME, RYAN! YOU'RE MY ONLY HOPE! 7/26/16
+        //Poll for vent status                  //(This currently doesn't work, is based on old hardware)
+        eventlog.println("Poll Vent Status  10");
+        if (Vent.read() > 11)
+        {
+          sendXBee("Vent Open");
+        }
+        else
+        {
+          sendXBee("Vent Closed");
+        }
+        break;
+      
+      case 11:                                //HELP ME, RYAN! YOU'RE MY ONLY HOPE! 7/26/16
+        {
+          //Poll for total open time in minutes
+          eventlog.println("Poll Time Open  11");
+          int TimeOpen = TotalOpen / 60000;
+          sendXBee(String(TimeOpen));
+        }
+        break;
+        
+       case 02:
+        //Add some amount of time to failsafe countdown
+        //NEEDS TO BE WRITTEN as of 7/26
+                                                    //HELP ME, RYAN! YOU'RE MY ONLY HOPE! 7/26/16
+        
+       case 12:
+        {
+          //Poll for remaining failsafe time in minutes:
+          eventlog.println("Poll failsafe time remaining  12");
+          unsigned long timeLeft = cutTime / 60000;
+          sendXBee(String(timeLeft));
+        }
+        break;
+        
+      case 03:
+        {
+          //Cutdown and check cutdown status
+          eventlog.println("Initiate Cutdown  03");
+          murderIt(); //NEEDS TO BE WRITTEN as of 7/26
+        }
+        
+      case 13:
+        {
+          //Check cutdown status
+          eventlog.println("Poll cutdown  13");
+          
+          if (isBurst())
+          {
+            sendXBee("Cutdown Successful");
+          }
+          else
+          {
+            sendXBee("Cutdown Failed");
+          }
+        }
+        break;
+        
+      case 04:
+        //Just extends the arrow. Pretty much just for GT
+        eventlog.println("Extend Arrow  04");
+        extendArrow();
+        break;
+        
+      case 05:
+        eventlog.println("Retract Arrow  05");
+        retractArrow();
+        break;
+        
+      /* We are not entirely sure if this is needed 7/26       //HELP ME RYAN YOU'RE MY ONLY HOPE 7/26/16
+      case 21:
+      case 22:
+      case 23:
+      case 24:
+      case 25:
+      case 26:
+      {
+        byte n = Com % 20;
+        eventlog.println("Poll ascent rate " + String(n));
+        int altDif = altitudes[1] - altitudes[0];
+        double timeDif = (times[1] - times[0]) / 60000.0;
+        double ascent = altDif / timeDif;
+        sendXBee(String(ascent) + "ft/min");
+      }
+      break;
+      */
+      
+        
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
