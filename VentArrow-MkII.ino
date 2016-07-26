@@ -40,7 +40,7 @@ HardwareSerial gpsSerial = Serial1, xBee = Serial3;
 Adafruit_GPS GPS(&gpsSerial);
 
 File datalog, eventlog;
-String dataname = "VentAr";
+String filename = "VentAr";
 char datafile[13], eventfile[13];
 
 const String xBeeID = "VA";
@@ -69,6 +69,10 @@ void setup() {
   gpsSerial.begin(9600);
   xBee.begin(9600);
 
+  //GPS setup and config
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+  
   //initialize SD card
   if (!SD.begin(chipSelect)) {
     while (true) {                  //power LED will blink if no card is inserted
@@ -80,7 +84,7 @@ void setup() {
   }
   for (int i = 0; i < 100; i++) {                 //check for existing files from previous runs of program...
     (filename + String(i / 10) + String(i % 10) + ".csv").toCharArray(datafile, sizeof(datafile));
-    if (!SD.exists(dataFile)) {                   //...and make sure a new file is opened each time
+    if (!SD.exists(datafile)) {                   //...and make sure a new file is opened each time
       openDatalog();
       (filename + String(i / 10) + String(i % 10) + ".txt").toCharArray(eventfile, sizeof(eventfile));
       openEventlog();
