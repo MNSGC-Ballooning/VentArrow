@@ -20,7 +20,7 @@ void xBeeCommand(){
     if (inChar == '!') {
       complete = true;
       break;
-    }
+    } 
     delay(10);
   }
   if (!complete) return;
