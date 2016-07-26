@@ -45,6 +45,7 @@ char datafile[13], eventfile[13];
 
 const String xBeeID = "VA";
 
+boolean startup = true;
 unsigned long flightStart = 0;
 
 //============================================================================================================================
@@ -105,7 +106,16 @@ void setup() {
 
   sendXBee("Setup Complete");
   sendXBee("Awaiting Startup");
+  while (true) {
+    xBeeCommand();
+    if (!startup) break;
+    delay(100);
+  }
+}
 
-  //need to add startup command
+//============================================================================================================================
+
+void loop(){
+  
 }
 
