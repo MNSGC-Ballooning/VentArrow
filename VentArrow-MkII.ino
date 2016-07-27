@@ -102,7 +102,7 @@ void setup() {
     }
   }
   
-  String Header = "Flight Time, Lat, Long, Altitude, Date, Hour, Min, Sec";
+  String Header = "Flight Time, Lat, Long, Altitude, Date, Hour:Min:Sec";
   datalog.println(Header);  //set up datalog format
   
   closeDatalog();
@@ -120,6 +120,7 @@ void setup() {
 //============================================================================================================================
 
 void loop(){
-  
+  updateGPS();
+  xBeeCommand();
 }
 
