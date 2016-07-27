@@ -8,9 +8,9 @@ Written by Ryan Bowers and Danny Toth 2016
 XBee Commands!
 ====================================================================================
 COMMAND|              FUNCTION               | NOTES
-- - -  | - - - - - - - - - - - - - - - - - - | - - - - - - - - - - - - - - - - - - - -
+= = = =|= = = = = = = = = = = = = = = = = = =|= = = = = = = = = = = = = = = = = = = 
 -1     | Flight Start/Reset flight clock     | Logs action, returns nothing
-- - -  | - - - - - - - - - - - - - - - - - - | - - - - - - - - - - - - - - - - - - - -
+= = = =|= = = = = = = = = = = = = = = = = = =|= = = = = = = = = = = = = = = = = = = 
 01     | Open vent until further command     | Logs action, returns nothing
 - - -  | - - - - - - - - - - - - - - - - - - | - - - - - - - - - - - - - - - - - - - -
 00     | Close Vent until further command    | Logs action, returns nothing
