@@ -36,17 +36,22 @@
 #define arrowFeed A7
 #define chipSelect 10
 
+const String xBeeID = "VA";
+
 HardwareSerial gpsSerial = Serial1, xBee = Serial3;
 Adafruit_GPS GPS(&gpsSerial);
 
 File datalog, eventlog;
-String filename = "VentAr";
 char datafile[13], eventfile[13];
 
-const String xBeeID = "VA";
+String filename = "VentAr";
+int cutTime = 240;        //Time in minutes after flight start to auto-cutdown
 
 boolean startup = true;
+boolean ventIsOpen = false;
 unsigned long flightStart = 0;
+unsigned long totalOpen = 0;
+unsigned long openTime;
 
 //============================================================================================================================
 

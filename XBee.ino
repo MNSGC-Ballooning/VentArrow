@@ -49,19 +49,19 @@ void xBeeCommand(){
     case 01:
         //Open Vent indefinitely
         eventlog.println("Open Vent  01");
-        openVent(); //NEEDS TO BE WRITTEN as of 7/26
+        openVent();
         break;
     
      case 00:
         //Close vent indefinitely
         eventlog.println("Close Vent  00");
-        closeVent()  //NEEDS TO BE WRITTEN as of 7/26
+        closeVent();
         break;
         
-     case 10:                                   //HELP ME, RYAN! YOU'RE MY ONLY HOPE! 7/26/16
-        //Poll for vent status                  //(This currently doesn't work, is based on old hardware)
+     case 10:
+        //Poll for vent status
         eventlog.println("Poll Vent Status  10");
-        if (Vent.read() > 11)
+        if (analogRead(ventFeed > 30)
         {
           sendXBee("Vent Open");
         }
@@ -71,24 +71,26 @@ void xBeeCommand(){
         }
         break;
       
-      case 11:                                //HELP ME, RYAN! YOU'RE MY ONLY HOPE! 7/26/16
+      case 11:
         {
-          //Poll for total open time in minutes
+          //Poll for total open time in minutes:seconds
           eventlog.println("Poll Time Open  11");
-          int TimeOpen = TotalOpen / 60000;
-          sendXBee(String(TimeOpen));
+          unsigned long t = totalOpen;
+          if (ventIsOpen)
+            t += millis() - openTime;
+          sendXBee(String(t));
         }
         break;
         
-       case 02: //Needs to be written
-        int addTime = 
-        
        case 12:
         {
-          //Poll for remaining failsafe time in minutes:
+          //Poll for remaining failsafe time in minutes:seconds
           eventlog.println("Poll failsafe time remaining  12");
-          unsigned long timeLeft = cutTime / 60000;
-          sendXBee(String(timeLeft));
+          int timeLeft = (cutTime - flightStart()) / 1000);
+          String timeLeftStr = String(timeLeft / 60) + ":");
+          timeLeft %= 60;
+          timeLeftStr += (String(timeLeft / 10) + String(timeLeft % 10));
+          sendXBee(timeLeftStr);
         }
         break;
         
@@ -96,22 +98,17 @@ void xBeeCommand(){
         {
           //Cutdown and check cutdown status
           eventlog.println("Initiate Cutdown  03");
-          murderIt(); //NEEDS TO BE WRITTEN as of 7/26
+          Legolas();
         }
         
       case 13:
         {
           //Check cutdown status
           eventlog.println("Poll cutdown  13");
-          
           if (isBurst())
-          {
             sendXBee("Cutdown Successful");
-          }
           else
-          {
             sendXBee("Cutdown Failed");
-          }
         }
         break;
         
