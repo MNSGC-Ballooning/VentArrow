@@ -80,10 +80,8 @@ void xBeeCommand(){
         }
         break;
         
-       case 02:
-        //Add some amount of time to failsafe countdown
-        //NEEDS TO BE WRITTEN as of 7/26
-                                                    //HELP ME, RYAN! YOU'RE MY ONLY HOPE! 7/26/16
+       case 02: //Needs to be written
+        int addTime = 
         
        case 12:
         {
@@ -146,7 +144,45 @@ void xBeeCommand(){
       break;
       */
       
+       default:
+        if (Com / 10000 == 1) { //Open For Time - five digits starting with 1; 2nd and 3rd are minutes, 4th and 5th are seconds
+          eventlog.println("Open for Time  " + String(Com));
+          int t = Com - 10000;
+          OpenTime = (t / 100 * 60) + (t % 100);
+          OpenTime *= 1000;
+          Open_for_Time();
+        }
+        else if(Com / 100 == 1) { //Add time in minutes to failsafe timer: 3 digits starting with 1; 2nd and third are minutes
+          eventlog.println("Adding time to failsafe: " + String(Com));
+          int addedTime = Com-100; //"addedTime" is now the amount of minutes to be added
+          addedTime *= 60000; //"addedTime" is now converted into milliseconds
+          cutTime += addedTime;
+        }
         
+        
+        
+        /*else if (Com / 1000 > 0 && Com / 1000 < 10){
+          byte a = Com /1000;
+          eventlog.println("Set autoTime" + String(a) + "  " + String(Com));
+          Com %= 1000;
+          unsigned long t = Com / 100 * 60000;
+          Com %= 100;
+          t += Com * 1000;
+          if (a == 1)
+            autoTime1 = t;
+          else if (a == 2)
+            autoTime2 = t;
+          else if (a == 3)
+            autoTime3 = t; */
+        }
+        else{
+          eventlog.println("Unknown command  " + String(Com));
+          sendXBee(String(Com) + "Command Not Recognized");
+        }
+    }//end Switch
+  }//end else
+     
+      closeEventlog();
   }
 }
 
