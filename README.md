@@ -11,7 +11,7 @@ XBee Commands!
 ====================================================================================
 COMMAND|              FUNCTION               | NOTES 
 
--1     | Flight Start/Reset flight clock     | Logs action, returns nothing
+-1     | Flight Start/Reset flight clock     | Logs action, returns nothing. Failsafe timer is 4 hours
   
 01     | Open vent until further command     | Logs action, returns nothing
 
@@ -34,6 +34,8 @@ COMMAND|              FUNCTION               | NOTES
 1xxxx  |     Open for parametric time        | 5 digit input starting with 1. 2nd and 3rd are minutes, 4th and 5th are seconds
 
 1xx    | Add parametric time to failsafe     | 3 digit input starting with 1. 2nd and 3rd are minutes
+
+-1xx   | Remove parametric time from failsafe| 3 digit input starting with -1. 2nd and 3rd are minutes
 
 
 
