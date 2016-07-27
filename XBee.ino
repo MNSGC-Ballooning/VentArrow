@@ -153,10 +153,19 @@ void xBeeCommand(){
           Open_for_Time();
         }
         else if(Com / 100 == 1) { //Add time in minutes to failsafe timer: 3 digits starting with 1; 2nd and third are minutes
-          eventlog.println("Adding time to failsafe: " + String(Com));
-          int addedTime = Com-100; //"addedTime" is now the amount of minutes to be added
-          addedTime *= 60000; //"addedTime" is now converted into milliseconds
-          cutTime += addedTime;
+          if(Com > 0){
+           eventlog.println("Adding time to failsafe: " + String(Com));
+           int addedTime = Com-100; //"addedTime" is now the amount of minutes to be added
+           addedTime *= 60000; //"addedTime" is now converted into milliseconds
+           cutTime += addedTime;
+          }
+          else
+          {
+            eventlog.println("Removing time from failsafe: " + String(Com));
+           int takenTime = Com-100; //"addedTime" is now the amount of minutes to be subtracted
+           takenTime *= 60000; //"addedTime" is now converted into milliseconds
+           cutTime -= takenTime;
+          }
         }
         
         
