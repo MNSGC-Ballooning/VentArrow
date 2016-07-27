@@ -29,6 +29,10 @@ COMMAND|              FUNCTION               | NOTES
 ------------------------------------------------------------------------------------
 05     | Just retracts cutdown arrow         | Logs action, returns nothing
 ------------------------------------------------------------------------------------
+1xxxx  |     Open for parametric time        | 5 digit input starting with 1. 2nd and 3rd are minutes, 4th and 5th are seconds
+------------------------------------------------------------------------------------
+1xx    | Add parametric time to failsafe     | 3 digit input starting with 1. 2nd and 3rd are minutes
+
 
 
 
