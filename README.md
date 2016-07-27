@@ -2,7 +2,9 @@
 
 Updated code for VentArrow MKII system.  
 
-Written by Ryan Bowers and Danny Toth 2016
+Written by Ryan Bowers and Danny Toth July/August 2016
+
+Code functions include XBee command support, a configurable failsafe cutdown timer, GPS support, SD support, and witty one-liners.
 
 ====================================================================================
 XBee Commands!
