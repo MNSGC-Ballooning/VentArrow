@@ -9,7 +9,7 @@ void openVent() {
   digitalWrite(ventOpen, LOW);
   sendXBee("Vent Opened");
   if (!ventIsOpen) {
-    ventOpen = true;
+    ventIsOpen = true;
     openTime = millis();
   }
 }
@@ -26,7 +26,7 @@ void closeVent() {
   digitalWrite(ventClose, LOW);
   sendXBee("Vent Opened");
   if (ventIsOpen) {
-    ventOpen = false;
+    ventIsOpen = false;
     totalOpen += millis() - openTime;
   }
 }
