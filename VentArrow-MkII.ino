@@ -26,8 +26,8 @@
 #include <Adafruit_GPS.h>
 
 //pin declarations
-#define powerLED 22
-#define dataLED 23
+#define powerLED 23
+#define dataLED 22
 #define ventOpen 16
 #define ventClose 17
 #define ventFeed A4

@@ -27,8 +27,6 @@ void xBeeCommand(){
   if (command.equals(lastCommand) && (millis() - commandTime < 10000)) return;
   int split = command.indexOf('?');
   if (!(command.substring(0, split)).equals(xBeeID)) return;
-  lastCommand = command;
-  commandTime = millis();
   int Com = (command.substring(split + 1, command.length() - 1)).toInt();
   acknowledge();
   openEventlog();
@@ -38,6 +36,7 @@ void xBeeCommand(){
     flightStart = millis();
     sendXBee("Flight Start");
     startup = false;
+    closeEventlog();
     return;
   }
   switch (Com) {
@@ -179,13 +178,16 @@ void xBeeCommand(){
           else if (a == 2)
             autoTime2 = t;
           else if (a == 3)
-            autoTime3 = t; */
-        }
+            autoTime3 = t;
+        } */
         else{
           eventlog.println("Unknown command  " + String(Com));
           sendXBee(String(Com) + "Command Not Recognized");
         }
     }//end Switch
+  lastCommand = command;
+  commandTime = millis();
+  closeEventlog();
   }//end else
      
       closeEventlog();
