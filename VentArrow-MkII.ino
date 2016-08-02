@@ -14,10 +14,10 @@
      Adafruit Ultimate GPS        | D0-1 (RX/TX1)         | Red LED connects to fix pin on GPS
      Series 2 xBee                | D7-8 (RX/TX3)         |
      Sparkfun SD Breakout         | D10-13 (CS,DO,DI,SCK1)|
-     Power LED (Green)            | D23                   | Turns on at startup - off indicates loss of power or critical error
-     Data LED (Yellow)            | D22                   | Flashes when writing to SD card
-     Vent Actuator                | D16-17, D18 (A4)      | Set D16 high to open, D17 high to close. D18/A4 is feedback
-     Arrow Actuator               | D19-20, D21 (A7)      | Set D19 high to exend, D20 high to retract. D21/A7 is feedback
+     Power LED (Green)            | D6                    | Turns on at startup - off indicates loss of power or critical error
+     Data LED (Yellow)            | D9                    | Flashes when writing to SD card
+     Vent Actuator                | D4-5, D14 (A0)        | Set D5 high to open, D4 high to close. D14/A0 is feedback
+     Arrow Actuator               | D2-3, D15 (A1)        | Set D3 high to exend, D2 high to retract. D15/A1 is feedback
      -------------------------------------------------------------------------------------------------------------------------
 */
 
@@ -26,19 +26,19 @@
 #include <Adafruit_GPS.h>
 
 //pin declarations
-#define powerLED 23
-#define dataLED 22
-#define ventOpen 16
-#define ventClose 17
-#define ventFeed A4
-#define arrowExt 19
-#define arrowRet 20
-#define arrowFeed A7
+#define powerLED 6
+#define dataLED 9
+#define ventOpen 5
+#define ventClose 4
+#define ventFeed A0
+#define arrowExt 3
+#define arrowRet 2
+#define arrowFeed A1
 #define chipSelect 10
 
 const String xBeeID = "VA";
 
-HardwareSerial gpsSerial = Serial1, xBee = Serial3;
+HardwareSerial gpsSerial = Serial1;
 Adafruit_GPS GPS(&gpsSerial);
 
 File datalog, eventlog;
@@ -72,7 +72,7 @@ void setup() {
   //begin all serial lines
   GPS.begin(9600);
   gpsSerial.begin(9600);
-  xBee.begin(9600);
+  Serial3.begin(9600);
 
   //GPS setup and config
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
@@ -109,12 +109,13 @@ void setup() {
   
   String Header = "Flight Time, Lat, Long, Altitude, Date, Hour:Min:Sec";
   datalog.println(Header);  //set up datalog format
-  
-  closeDatalog();
-  closeEventlog();
 
   sendXBee("Setup Complete");
   sendXBee("Awaiting Startup");
+  
+  closeDatalog();
+  closeEventlog();
+  
   while (true) {
     xBeeCommand();
     if (!startup) break;

@@ -24,7 +24,7 @@ void closeVent() {
     delay(50);
   }
   digitalWrite(ventClose, LOW);
-  sendXBee("Vent Opened");
+  sendXBee("Vent Closed");
   if (ventIsOpen) {
     ventIsOpen = false;
     totalOpen += millis() - openTime;

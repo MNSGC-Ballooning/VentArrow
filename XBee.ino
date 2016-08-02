@@ -1,10 +1,10 @@
 void sendXBee(String out) {
-  Serial3.println(out);
+  Serial3.println(xBeeID + ";" + out + "!");
   eventlog.println(flightTimeStr() + "  TX  " + out);
 }
 
 void acknowledge() {
-  xBee.println(xBeeID + "\n");
+  Serial3.println(xBeeID + "\n");
 }
 
 String lastCommand = "";
@@ -14,8 +14,8 @@ void xBeeCommand() {
   boolean complete = false;
   String command = "";
   char inChar;
-  while (xBee.available() > 0) {
-    inChar = (char)xBee.read();
+  while (Serial3.available() > 0) {
+    inChar = (char)Serial3.read();
     command += inChar;
     if (inChar == '!') {
       complete = true;
@@ -77,11 +77,13 @@ void xBeeCommand() {
         unsigned long t = totalOpen;
         if (ventIsOpen)
           t += millis() - openTime;
-        sendXBee(String(t));
+        t /= 1000;
+        String tStr = String(t/60) + ":" + String(t%60);
+        sendXBee(tStr);
       }
       break;
 
-    case 12:
+    case 12: //fix
       {
         //Poll for remaining failsafe time in minutes:seconds
         eventlog.println("Poll failsafe time remaining  12");
