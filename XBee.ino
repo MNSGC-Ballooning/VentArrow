@@ -78,7 +78,9 @@ void xBeeCommand() {
         if (ventIsOpen)
           t += millis() - openTime;
         t /= 1000;
-        String tStr = String(t/60) + ":" + String(t%60);
+        String tStr = String(t / 60) + ":";
+        t %= 60;
+        tStr += String(t / 10) + String(t % 10);
         sendXBee(tStr);
       }
       break;
@@ -87,7 +89,7 @@ void xBeeCommand() {
       {
         //Poll for remaining failsafe time in minutes:seconds
         eventlog.println("Poll failsafe time remaining  12");
-        int timeLeft = ((cutTime - flightStart) / 1000);
+        int timeLeft = cutTime - (flightStart / 1000);
         String timeLeftStr = (String(timeLeft / 60) + ":");
         timeLeft %= 60;
         timeLeftStr += (String(timeLeft / 10) + String(timeLeft % 10));
@@ -105,7 +107,8 @@ void xBeeCommand() {
     case 13:
       {
         //Check cutdown status
-        eventlog.println("Poll cutdown  13");
+        if (Com == 13)
+          eventlog.println("Poll cutdown  13");
         if (isBurst())
           sendXBee("Cutdown Successful");
         else
@@ -190,15 +193,3 @@ void xBeeCommand() {
   commandTime = millis();
   closeEventlog();
 }
-
-
-
-
-
-
-
-
-
-
-
-

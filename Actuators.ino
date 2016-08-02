@@ -7,7 +7,10 @@ void openVent() {
     delay(50);
   }
   digitalWrite(ventOpen, LOW);
-  sendXBee("Vent Opened");
+  if (analogRead(ventFeed) > 1010)
+    sendXBee("Vent Opened");
+  else
+    sendXBee("Open Vent failed");
   if (!ventIsOpen) {
     ventIsOpen = true;
     openTime = millis();
@@ -20,11 +23,14 @@ void closeVent() {
   digitalWrite(ventOpen, LOW);
   digitalWrite(ventClose, HIGH);
   unsigned long t = millis();
-  while (analogRead(ventFeed) > 30 && millis() - t < 10000) {
+  while (analogRead(ventFeed) > 25 && millis() - t < 10000) {
     delay(50);
   }
   digitalWrite(ventClose, LOW);
-  sendXBee("Vent Closed");
+  if (analogRead(ventFeed) < 30)
+    sendXBee("Vent Closed");
+  else
+    sendXBee("Vent Close failed");
   if (ventIsOpen) {
     ventIsOpen = false;
     totalOpen += millis() - openTime;
@@ -54,7 +60,10 @@ void extendArrow() {
     delay(50);
   }
   digitalWrite(arrowExt, LOW);
-  sendXBee("Arrow Extended");
+  if (analogRead(arrowFeed) > 1010)
+    sendXBee("Arrow Extended");
+  else
+    sendXBee("Arrow Extend failed");
 }
 
 
@@ -63,18 +72,21 @@ void retractArrow() {
   digitalWrite(arrowExt, LOW);
   digitalWrite(arrowRet, HIGH);
   unsigned long t = millis();
-  while (analogRead(arrowFeed) > 30 && millis() - t < 10000) {
+  while (analogRead(arrowFeed) > 25 && millis() - t < 10000) {
     delay(50);
   }
   digitalWrite(arrowRet, LOW);
-  sendXBee("Arrow Retracted");
+  if (analogRead(arrowFeed) < 30)
+    sendXBee("Arrow Retracted");
+  else
+    sendXBee("Arrow Retract failed");
 }
 
 
 void Legolas() {    //full arrow cutdown routine which, like The Hobbit movies,
   extendArrow();    //features an unneccessary appearance by everyone's favorite elf.
   unsigned long t = millis();
-  while ((millis() - t < 10000) && !isBurst()) {
+  while (millis() - t < 10000) {
     updateGPS();
     xBeeCommand();
   }

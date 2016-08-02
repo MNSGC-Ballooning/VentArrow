@@ -28,10 +28,13 @@ boolean isBurst() {
   updateGPS();
   float alt1 = GPS.altitude;
   unsigned long t = millis();
-  for (int i = 0; i < 10; i++) {
+  byte counter = 0;
+  while (millis() - t < 10000) {
     updateGPS();
-    sendXBee("Check for burst in " + String(10 - i));
-    delay(995);
+    if ((millis() - t) / 1000 > counter) {
+      counter++;
+      sendXBee("Burst check in " + String(10 - counter));
+    }
   }
   updateGPS();
   if (GPS.altitude < alt1) return true;
