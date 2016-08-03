@@ -37,7 +37,7 @@ boolean isBurst() {
     }
   }
   updateGPS();
-  if (GPS.altitude < alt1) return true;
-  else                     return false;
+  if (alt1 - GPS.altitude > 300) return true;
+  else                           return false;
 }
 
