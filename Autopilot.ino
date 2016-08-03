@@ -1,17 +1,3 @@
-class AutoVent {
-  private:
-    int targetAlt;
-    int alts[4], times[4];
-    byte reached = 0;
-    int ventTime;
-  public:
-    int rate1();
-    int rate2();
-    void autoCheck();
-    AutoVent(int alt, unsigned long vent);
-    ~AutoVent();
-};
-
 int AutoVent::rate1() {
   return (alts[1] - alts[0])/(times[1] - times[0]);
 }
@@ -62,6 +48,8 @@ AutoVent::AutoVent(int alt, unsigned long vent) {
 }
 
 void autopilot() {
-  
+  for (AutoVent autovent : autos) {
+    autovent.autoCheck();
+  }
 }
 
