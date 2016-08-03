@@ -24,6 +24,10 @@ void updateGPS() {
   }
 }
 
+int getGPStime() {    //returns GPS time as seconds since 0:00:00 UTC. Note that comparisons crossing that time will be inaccurate
+  return GPS.hour * 3600 + GPS.minute * 60 + GPS.seconds;
+}
+
 boolean isBurst() {
   updateGPS();
   float alt1 = GPS.altitude;

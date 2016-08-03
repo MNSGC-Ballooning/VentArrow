@@ -24,7 +24,7 @@ void xBeeCommand() {
     delay(10);
   }
   if (!complete) return;
-  if (command.equals(lastCommand) && (millis() - commandTime < 10000)) return;
+  if (command.equals(lastCommand) && (millis() - commandTime < 30000)) return;
   int split = command.indexOf('?');
   if (!(command.substring(0, split)).equals(xBeeID)) return;
   int Com = (command.substring(split + 1, command.length() - 1)).toInt();
