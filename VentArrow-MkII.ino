@@ -36,6 +36,19 @@
 #define arrowFeed A1
 #define chipSelect 10
 
+class AutoVent {
+  private:
+    int targetAlt;
+    int alts[4], times[4];
+    byte reached = 0;
+    int ventTime;
+  public:
+    int rate1();
+    int rate2();
+    void autoCheck();
+    AutoVent(int alt, unsigned long vent);
+};
+
 const String xBeeID = "VA";
 
 HardwareSerial gpsSerial = Serial1;
@@ -46,12 +59,15 @@ char datafile[13], eventfile[13];
 
 String filename = "VentAr";
 int cutTime = 240;        //Time in minutes after flight start to auto-cutdown
+int cutAlt = 100000;      //Altitude in ft to auto cutdown
+AutoVent autos[] = {AutoVent(30000, 60), AutoVent(50000, 60), AutoVent(70000, 60)};
 
 boolean startup = true;
 boolean ventIsOpen = false;
 unsigned long flightStart = 0;
 unsigned long totalOpen = 0;
 unsigned long openTime;
+boolean hasBurst = false;
 
 //============================================================================================================================
 
@@ -128,5 +144,6 @@ void setup() {
 void loop(){
   updateGPS();
   xBeeCommand();
+  autopilot();
 }
 
