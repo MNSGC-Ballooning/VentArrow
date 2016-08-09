@@ -47,13 +47,13 @@ void xBeeCommand() {
       break;
     case 01:
       //Open Vent indefinitely
-      eventlog.println("Open Vent  01");
+      eventlog.println("Open Vent  1");
       openVent();
       break;
 
     case 00:
       //Close vent indefinitely
-      eventlog.println("Close Vent  00");
+      eventlog.println("Close Vent  0");
       closeVent();
       break;
 
@@ -100,7 +100,7 @@ void xBeeCommand() {
     case 03:
       {
         //Cutdown and check cutdown status
-        eventlog.println("Initiate Cutdown  03");
+        eventlog.println("Initiate Cutdown  3");
         Legolas();
       }
 
@@ -118,12 +118,12 @@ void xBeeCommand() {
 
     case 04:
       //Just extends the arrow. Pretty much just for GT
-      eventlog.println("Extend Arrow  04");
+      eventlog.println("Extend Arrow  4");
       extendArrow();
       break;
 
     case 05:
-      eventlog.println("Retract Arrow  05");
+      eventlog.println("Retract Arrow  5");
       retractArrow();
       break;
 

@@ -1,6 +1,6 @@
 /*  This code is designed to run on a Teensy 3.2 on board the VentArrow MkII.
     Currently supports use of GPS, SD datalogging, and xBee communications.
-    Diff Pressure sensor to be added later.
+    Pressure sensors to be added later.
     Can be used as both an autonomous system or commanded from ground via RFD relay. */
 
 /*  By: Ryan Bowers, with assistance from Danny Toth

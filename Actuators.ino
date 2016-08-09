@@ -4,6 +4,7 @@ void openVent() {
   digitalWrite(ventOpen, HIGH);
   unsigned long t = millis();
   while (analogRead(ventFeed) < 1023 && millis() - t < 10000) {
+    updateGPS();
     delay(50);
   }
   digitalWrite(ventOpen, LOW);
@@ -24,6 +25,7 @@ void closeVent() {
   digitalWrite(ventClose, HIGH);
   unsigned long t = millis();
   while (analogRead(ventFeed) > 25 && millis() - t < 10000) {
+    updateGPS();
     delay(50);
   }
   digitalWrite(ventClose, LOW);
@@ -57,6 +59,7 @@ void extendArrow() {
   digitalWrite(arrowExt, HIGH);
   unsigned long t = millis();
   while (analogRead(arrowFeed) < 1023 && millis() - t < 10000) {
+    updateGPS();
     delay(50);
   }
   digitalWrite(arrowExt, LOW);
@@ -73,6 +76,7 @@ void retractArrow() {
   digitalWrite(arrowRet, HIGH);
   unsigned long t = millis();
   while (analogRead(arrowFeed) > 25 && millis() - t < 10000) {
+    updateGPS();
     delay(50);
   }
   digitalWrite(arrowRet, LOW);
