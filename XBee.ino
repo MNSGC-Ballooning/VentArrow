@@ -101,7 +101,7 @@ void xBeeCommand() {
       {
         //Poll for remaining failsafe time in minutes:seconds
         eventlog.println("Poll failsafe time remaining  12");
-        int timeLeft = cutTime - (flightStart / 1000);
+        int timeLeft = cutTime * 60 - (flightTime() / 1000);
         String timeLeftStr = (String(timeLeft / 60) + ":");
         timeLeft %= 60;
         timeLeftStr += (String(timeLeft / 10) + String(timeLeft % 10));
@@ -136,16 +136,14 @@ void xBeeCommand() {
         openForTime(t);
       }
       else if (Com / 100 == 1) { //Add time in minutes to failsafe timer: 3 digits starting with 1; 2nd and third are minutes
-        if (Com > 0) {
           eventlog.println("Adding time to failsafe: " + String(Com));
           int addedTime = Com - 100; //"addedTime" is now the amount of minutes to be added
           cutTime += addedTime;
-        }
-        else if (Com / 100 == -1) {
-          eventlog.println("Removing time from failsafe: " + String(Com));
-          int takenTime = Com - 100; //"addedTime" is now the amount of minutes to be subtracted
-          cutTime -= takenTime;
-        }
+      }
+      else if (Com / 100 == -1) {
+        eventlog.println("Removing time from failsafe: " + String(Com));
+        int takenTime = Com - 100; //"addedTime" is now the amount of minutes to be subtracted
+        cutTime -= takenTime;
       }
 
 

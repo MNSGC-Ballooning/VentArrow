@@ -30,7 +30,7 @@ void AutoVent::autoCheck() {
       }
       break;
     case 2:
-      if (getGPStime() - times[2] > 60000) {
+      if (getGPStime() - times[2] > 5 * 60000) {
         alts[3] = gpsAlt;
         times[3] = getGPStime();
         openEventlog();
