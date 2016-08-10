@@ -115,6 +115,23 @@ void xBeeCommand() {
       }
       break;
 
+    case 21:
+      //Poll most recent ascent rate
+      eventlog.println("Poll ascent rate  21");
+      if (lastRate == 0) {
+        updateGPS();
+        int alt1 = GPS.altitude, time1 = getGPStime();
+        unsigned long t = millis();
+        while (millis() - t < 10000) {
+          updateGPS();
+          xBeeCommand();
+        }
+        updateGPS();
+        lastRate = (GPS.altitude - alt1) / (getGPStime() - time1);
+      }
+      sendXBee(String(lastRate) + "ft/s");
+      break;
+
     case 42:  //"Not bad for a pointy-eared elvish princeling..."
       //Cutdown and check cutdown status
       eventlog.println("Initiate Cutdown  42");
@@ -153,14 +170,14 @@ void xBeeCommand() {
         Com -= 20000;
         byte autovent = Com / 1000;
         Com %= 1000;
-        autos[autovent].ventTime = (Com / 100 * 60) + (Com % 100);
+        autos[autovent - 1].ventTime = (Com / 100 * 60) + (Com % 100);
       }
       else if (Com / 10000 == 3) { //Set a new target altitude for an AutoVent
         eventlog.println("Set AutoVent target altitude  " + String(Com));
         Com -= 30000;
         byte autovent = Com / 1000;
         Com %= 1000;
-        autos[autovent].targetAlt = Com * 1000;
+        autos[autovent - 1].targetAlt = Com * 1000;
       }
       
       else {
