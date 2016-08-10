@@ -113,6 +113,7 @@ void xBeeCommand() {
       for (int i = 0; i < sizeof(autos) / sizeof(autos[1]); i++) {
         sendXBee(String(i+1) + ": " + String(autos[i].targetAlt) + "ft, " + String(autos[i].ventTime) + "sec");
       }
+      break;
 
     case 42:  //"Not bad for a pointy-eared elvish princeling..."
       //Cutdown and check cutdown status
