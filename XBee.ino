@@ -142,8 +142,8 @@ void xBeeCommand() {
       }
       else if (Com / 100 == -1) {
         eventlog.println("Removing time from failsafe: " + String(Com));
-        int takenTime = Com - 100; //"addedTime" is now the amount of minutes to be subtracted
-        cutTime -= takenTime;
+        int takenTime = Com + 100; //"addedTime" is now the amount of minutes to be subtracted
+        cutTime += takenTime;
       }
 
 

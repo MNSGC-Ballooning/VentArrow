@@ -3,12 +3,12 @@ void openVent() {
   digitalWrite(ventClose, LOW);
   digitalWrite(ventOpen, HIGH);
   unsigned long t = millis();
-  while (analogRead(ventFeed) < 1023 && millis() - t < 10000) {
+  while (analogRead(ventFeed) < 1020 && millis() - t < 5000) {
     updateGPS();
     delay(50);
   }
   digitalWrite(ventOpen, LOW);
-  if (analogRead(ventFeed) > 1010)
+  if (analogRead(ventFeed) > 1015)
     sendXBee("Vent Opened");
   else
     sendXBee("Open Vent failed");
@@ -24,12 +24,12 @@ void closeVent() {
   digitalWrite(ventOpen, LOW);
   digitalWrite(ventClose, HIGH);
   unsigned long t = millis();
-  while (analogRead(ventFeed) > 25 && millis() - t < 10000) {
+  while (analogRead(ventFeed) > 50 && millis() - t < 5000) {
     updateGPS();
     delay(50);
   }
   digitalWrite(ventClose, LOW);
-  if (analogRead(ventFeed) < 30)
+  if (analogRead(ventFeed) < 55)
     sendXBee("Vent Closed");
   else
     sendXBee("Vent Close failed");
@@ -58,12 +58,12 @@ void extendArrow() {
   digitalWrite(arrowRet, LOW);
   digitalWrite(arrowExt, HIGH);
   unsigned long t = millis();
-  while (analogRead(arrowFeed) < 1023 && millis() - t < 10000) {
+  while (analogRead(arrowFeed) < 1020 && millis() - t < 10000) {
     updateGPS();
     delay(50);
   }
   digitalWrite(arrowExt, LOW);
-  if (analogRead(arrowFeed) > 1010)
+  if (analogRead(arrowFeed) > 1015)
     sendXBee("Arrow Extended");
   else
     sendXBee("Arrow Extend failed");
@@ -75,12 +75,12 @@ void retractArrow() {
   digitalWrite(arrowExt, LOW);
   digitalWrite(arrowRet, HIGH);
   unsigned long t = millis();
-  while (analogRead(arrowFeed) > 25 && millis() - t < 10000) {
+  while (analogRead(arrowFeed) > 70 && millis() - t < 10000) {
     updateGPS();
     delay(50);
   }
   digitalWrite(arrowRet, LOW);
-  if (analogRead(arrowFeed) < 30)
+  if (analogRead(arrowFeed) < 75)
     sendXBee("Arrow Retracted");
   else
     sendXBee("Arrow Retract failed");
