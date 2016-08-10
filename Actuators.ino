@@ -87,7 +87,7 @@ void retractArrow() {
 }
 
 
-void Legolas() {    //full arrow cutdown routine which, like The Hobbit movies,
+void Legolas() {    //full arrow cutdown routine which, like the Hobbit movies,
   extendArrow();    //features an unneccessary appearance by everyone's favorite elf.
   unsigned long t = millis();
   while (millis() - t < 10000) {

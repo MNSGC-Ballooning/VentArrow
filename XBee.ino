@@ -45,16 +45,28 @@ void xBeeCommand() {
       eventlog.println("Flight Clock Reset  -1");
       flightStart = millis();
       break;
-    case 01:
+    
+    case 0:
+      //Close vent indefinitely
+      eventlog.println("Close Vent  0");
+      closeVent();
+      break;
+    
+    case 1:
       //Open Vent indefinitely
       eventlog.println("Open Vent  1");
       openVent();
       break;
 
-    case 00:
-      //Close vent indefinitely
-      eventlog.println("Close Vent  0");
-      closeVent();
+    case 4:
+      //Just extends the arrow. Pretty much just for GT
+      eventlog.println("Extend Arrow  4");
+      extendArrow();
+      break;
+
+    case 5:
+      eventlog.println("Retract Arrow  5");
+      retractArrow();
       break;
 
     case 10:
@@ -85,7 +97,7 @@ void xBeeCommand() {
       }
       break;
 
-    case 12: //fix
+    case 12:
       {
         //Poll for remaining failsafe time in minutes:seconds
         eventlog.println("Poll failsafe time remaining  12");
@@ -97,53 +109,24 @@ void xBeeCommand() {
       }
       break;
 
-    case 03:
+    case 42:  //"Not bad for a pointy-eared elvish princeling..."
       {
         //Cutdown and check cutdown status
-        eventlog.println("Initiate Cutdown  3");
+        eventlog.println("Initiate Cutdown  42");
         Legolas();
       }
 
-    case 13:
+    case 43:  //"...But I myself am sitting pretty on fourty-three!"
       {
         //Check cutdown status
-        if (Com == 13)
-          eventlog.println("Poll cutdown  13");
+        if (Com == 43)
+          eventlog.println("Poll cutdown  43");
         if (isBurst())
           sendXBee("Cutdown Successful");
         else
           sendXBee("Cutdown Failed");
       }
       break;
-
-    case 04:
-      //Just extends the arrow. Pretty much just for GT
-      eventlog.println("Extend Arrow  4");
-      extendArrow();
-      break;
-
-    case 05:
-      eventlog.println("Retract Arrow  5");
-      retractArrow();
-      break;
-
-    /* We are not entirely sure if this is needed 7/26       //HELP ME RYAN YOU'RE MY ONLY HOPE 7/26/16
-      case 21:
-      case 22:
-      case 23:
-      case 24:
-      case 25:
-      case 26:
-      {
-      byte n = Com % 20;
-      eventlog.println("Poll ascent rate " + String(n));
-      int altDif = altitudes[1] - altitudes[0];
-      double timeDif = (times[1] - times[0]) / 60000.0;
-      double ascent = altDif / timeDif;
-      sendXBee(String(ascent) + "ft/min");
-      }
-      break;
-    */
 
     default:
       if (Com / 10000 == 1) { //Open For Time - five digits starting with 1; 2nd and 3rd are minutes, 4th and 5th are seconds
