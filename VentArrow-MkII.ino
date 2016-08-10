@@ -38,11 +38,11 @@
 
 class AutoVent {
   private:
-    int targetAlt;
     int alts[4], times[4];
     byte reached = 0;
-    int ventTime;
   public:
+    int targetAlt;
+    int ventTime;
     int rate1();
     int rate2();
     void autoCheck();

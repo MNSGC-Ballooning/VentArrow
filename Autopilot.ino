@@ -1,11 +1,14 @@
 int gpsAlt;
+int lastRate = 0;
 
 int AutoVent::rate1() {
-  return (alts[1] - alts[0])/(times[1] - times[0]);
+  lastRate = (alts[1] - alts[0])/(times[1] - times[0]);
+  return lastRate;
 }
 
 int AutoVent::rate2() {
-  return (alts[3] - alts[2])/(times[3] - times[2]);
+  lastRate = (alts[3] - alts[2])/(times[3] - times[2]);
+  return lastRate;
 }
 
 void AutoVent::autoCheck() {
@@ -22,6 +25,8 @@ void AutoVent::autoCheck() {
         alts[1] = gpsAlt;
         times[1] = getGPStime();
         openEventlog();
+        sendXBee("Ascent Rate: " + String(rate1()));
+        sendXBee("Reached " + String(targetAlt) + "ft, venting for " + String(ventTime) + "s");
         openForTime(ventTime);
         closeEventlog();
         alts[2] = gpsAlt;
@@ -34,9 +39,7 @@ void AutoVent::autoCheck() {
         alts[3] = gpsAlt;
         times[3] = getGPStime();
         openEventlog();
-        eventlog.print(flightTimeStr() + "  AC  AutoVent for " + String(ventTime) + " seconds at ");
-        eventlog.println(String(targetAlt) + " ft");
-        eventlog.println("             Ascent rate lowered from " + String(rate1()) + " to " + String(rate2()) + " ft/s");
+        sendXBee("Ascent Rate: " + String(rate2()));
         closeEventlog();
         reached++;
       }

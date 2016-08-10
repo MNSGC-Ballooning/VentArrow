@@ -16,10 +16,12 @@ void xBeeCommand() {
   char inChar;
   while (Serial3.available() > 0) {
     inChar = (char)Serial3.read();
-    command += inChar;
-    if (inChar == '!') {
-      complete = true;
-      break;
+    if (inChar != ' ') {
+      command += inChar;
+      if (inChar == '!') {
+        complete = true;
+        break;
+      }
     }
     delay(10);
   }
@@ -82,8 +84,7 @@ void xBeeCommand() {
       }
       break;
 
-    case 11:
-      {
+    case 11: {
         //Poll for total open time in minutes:seconds
         eventlog.println("Poll Time Open  11");
         unsigned long t = totalOpen;
@@ -94,11 +95,9 @@ void xBeeCommand() {
         t %= 60;
         tStr += String(t / 10) + String(t % 10);
         sendXBee(tStr);
-      }
-      break;
+      } break;
 
-    case 12:
-      {
+    case 12: {
         //Poll for remaining failsafe time in minutes:seconds
         eventlog.println("Poll failsafe time remaining  12");
         int timeLeft = cutTime * 60 - (flightTime() / 1000);
@@ -106,26 +105,28 @@ void xBeeCommand() {
         timeLeft %= 60;
         timeLeftStr += (String(timeLeft / 10) + String(timeLeft % 10));
         sendXBee(timeLeftStr);
+      } break;
+
+    case 20:
+      //Get a list of all current AutoVent times and altitudes. Number at front indicates digit to use
+      eventlog.println("Get list of AutoVents  20");
+      for (int i = 0; i < sizeof(autos) / sizeof(autos[1]); i++) {
+        sendXBee(String(i+1) + ": " + String(autos[i].targetAlt) + "ft, " + String(autos[i].ventTime) + "sec");
       }
-      break;
 
     case 42:  //"Not bad for a pointy-eared elvish princeling..."
-      {
-        //Cutdown and check cutdown status
-        eventlog.println("Initiate Cutdown  42");
-        Legolas();
-      }
+      //Cutdown and check cutdown status
+      eventlog.println("Initiate Cutdown  42");
+      Legolas();
 
     case 43:  //"...But I myself am sitting pretty on fourty-three!"
-      {
-        //Check cutdown status
-        if (Com == 43)
-          eventlog.println("Poll cutdown  43");
-        if (isBurst())
-          sendXBee("Cutdown Successful");
-        else
-          sendXBee("Cutdown Failed");
-      }
+      //Check cutdown status
+      if (Com == 43)
+        eventlog.println("Poll cutdown  43");
+      if (isBurst())
+        sendXBee("Cutdown Successful");
+      else
+        sendXBee("Cutdown Failed");
       break;
 
     default:
@@ -136,32 +137,31 @@ void xBeeCommand() {
         openForTime(t);
       }
       else if (Com / 100 == 1) { //Add time in minutes to failsafe timer: 3 digits starting with 1; 2nd and third are minutes
-          eventlog.println("Adding time to failsafe: " + String(Com));
+          eventlog.println("Add time to failsafe  " + String(Com));
           int addedTime = Com - 100; //"addedTime" is now the amount of minutes to be added
           cutTime += addedTime;
       }
       else if (Com / 100 == -1) {
-        eventlog.println("Removing time from failsafe: " + String(Com));
+        eventlog.println("Remove time from failsafe  " + String(Com));
         int takenTime = Com + 100; //"addedTime" is now the amount of minutes to be subtracted
         cutTime += takenTime;
       }
 
-
-
-      /*else if (Com / 1000 > 0 && Com / 1000 < 10){
-        byte a = Com /1000;
-        eventlog.println("Set autoTime" + String(a) + "  " + String(Com));
+      else if (Com / 10000 == 2) { //Set a new duration for an AutoVent
+        eventlog.println("Set AutoVent time  " + String(Com));
+        Com -= 20000;
+        byte autovent = Com / 1000;
         Com %= 1000;
-        unsigned long t = Com / 100 * 60000;
-        Com %= 100;
-        t += Com * 1000;
-        if (a == 1)
-          autoTime1 = t;
-        else if (a == 2)
-          autoTime2 = t;
-        else if (a == 3)
-          autoTime3 = t;
-        } */
+        autos[autovent].ventTime = (Com / 100 * 60) + (Com % 100);
+      }
+      else if (Com / 10000 == 3) { //Set a new target altitude for an AutoVent
+        eventlog.println("Set AutoVent target altitude  " + String(Com));
+        Com -= 30000;
+        byte autovent = Com / 1000;
+        Com %= 1000;
+        autos[autovent].targetAlt = Com * 1000;
+      }
+      
       else {
         eventlog.println("Unknown command  " + String(Com));
         sendXBee(String(Com) + "Command Not Recognized");

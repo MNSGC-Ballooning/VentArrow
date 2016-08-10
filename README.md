@@ -27,6 +27,8 @@ COMMAND|              FUNCTION               | NOTES
 
 12     | Poll remaining failsafe time        | Returns time until auto cut in min:sec
 
+20	   | Get list of AutoVent alts and times | Returns numbered list of planned AutoVents. Use # in commands for editing AutoVents
+
 42     | Initiate Cutdown					 | Extends the arrow for 10 seconds, then retracts automatically and checks for burst
 
 43     | Check cutdown status                | Returns success/fail based on altitude change over last 10 seconds
@@ -37,6 +39,6 @@ COMMAND|              FUNCTION               | NOTES
 
 -1xx   | Remove xx minutes from failsafe     | 3 digit input starting with -1. 2nd and 3rd are minutes
 
+2xyzz  | Set time of y min, z sec for Auto x | 5 digits starting with 2. 2nd is # of AutoVent from Command 20, 3 is min, 4-5 sec
 
-
-
+3xyyy  | Set target of yyy,000ft for Auto x	 | 5 digits starting with 3. 2nd is # of AutoVent from Command 20, 3-5 are 1,000s of ft
