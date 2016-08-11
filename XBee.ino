@@ -74,14 +74,12 @@ void xBeeCommand() {
     case 10:
       //Poll for vent status
       eventlog.println("Poll Vent Status  10");
-      if (analogRead(ventFeed) > 30)
-      {
+      if (analogRead(ventFeed) > 1015)
         sendXBee("Vent Open");
-      }
-      else
-      {
+      else if (analogRead(ventFeed) < ventMin + 5)
         sendXBee("Vent Closed");
-      }
+      else
+        sendXBee("Vent " + String(ventPercent()) + "% open");
       break;
 
     case 11: {

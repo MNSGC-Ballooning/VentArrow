@@ -48,7 +48,7 @@ void AutoVent::autoCheck() {
 }
 
 AutoVent::AutoVent(int alt, unsigned long vent) {
-  targetAlt = alt;
+  targetAlt = alt * 1000;
   ventTime = vent;
 }
 

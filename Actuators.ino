@@ -3,15 +3,17 @@ void openVent() {
   digitalWrite(ventClose, LOW);
   digitalWrite(ventOpen, HIGH);
   unsigned long t = millis();
-  while (analogRead(ventFeed) < 1020 && millis() - t < 5000) {
+  while (analogRead(ventFeed) < 1020 && millis() - t < 10000) {
     updateGPS();
     delay(50);
   }
   digitalWrite(ventOpen, LOW);
   if (analogRead(ventFeed) > 1015)
     sendXBee("Vent Opened");
-  else
+  else {
     sendXBee("Open Vent failed");
+    sendXBee("Vent " + String(ventPercent()) + "% open");
+  }
   if (!ventIsOpen) {
     ventIsOpen = true;
     openTime = millis();
@@ -24,19 +26,27 @@ void closeVent() {
   digitalWrite(ventOpen, LOW);
   digitalWrite(ventClose, HIGH);
   unsigned long t = millis();
-  while (analogRead(ventFeed) > 50 && millis() - t < 5000) {
+  while (analogRead(ventFeed) > ventMin && millis() - t < 10000) {
     updateGPS();
     delay(50);
   }
   digitalWrite(ventClose, LOW);
-  if (analogRead(ventFeed) < 55)
+  if (analogRead(ventFeed) < ventMin + 5)
     sendXBee("Vent Closed");
-  else
+  else {
     sendXBee("Vent Close failed");
+    sendXBee("Vent " + String(ventPercent()) + "% open");
+  }
   if (ventIsOpen) {
     ventIsOpen = false;
     totalOpen += millis() - openTime;
   }
+}
+
+int ventPercent() {
+  int pos = analogRead(ventFeed);
+  pos -= ventMin;
+  return (pos * 100 / (1023 - ventMin));
 }
 
 
@@ -47,7 +57,7 @@ void openForTime(int timeOpen) {
   while (millis() - t < timeOpen) {
     updateGPS();
     xBeeCommand();
-    if (analogRead(ventFeed) < 30) return;
+    if (analogRead(ventFeed) < ventMin + 5) return;
   }
   closeVent();
 }
@@ -75,12 +85,12 @@ void retractArrow() {
   digitalWrite(arrowExt, LOW);
   digitalWrite(arrowRet, HIGH);
   unsigned long t = millis();
-  while (analogRead(arrowFeed) > 70 && millis() - t < 10000) {
+  while (analogRead(arrowFeed) > arrowMin && millis() - t < 10000) {
     updateGPS();
     delay(50);
   }
   digitalWrite(arrowRet, LOW);
-  if (analogRead(arrowFeed) < 75)
+  if (analogRead(arrowFeed) < arrowMin + 5)
     sendXBee("Arrow Retracted");
   else
     sendXBee("Arrow Retract failed");
