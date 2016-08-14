@@ -70,7 +70,7 @@ unsigned long openTime;
 boolean hasBurst = false;
 
 int ventMin = 50;
-int arrowMin = 70
+int arrowMin = 70;
 
 //============================================================================================================================
 
