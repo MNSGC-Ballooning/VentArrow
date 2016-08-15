@@ -47,6 +47,11 @@ void xBeeCommand() {
       eventlog.println("Flight Clock Reset  -1");
       flightStart = millis();
       break;
+
+    case -10:
+      //debugging request for analogRead()
+      sendXBee(String(analogRead(ventFeed)));
+      break;
     
     case 0:
       //Close vent indefinitely
@@ -83,7 +88,7 @@ void xBeeCommand() {
       eventlog.println("Poll Vent Status  10");
       if (analogRead(ventFeed) > 1015)
         sendXBee("Vent Open");
-      else if (analogRead(ventFeed) < ventMin + 5)
+      else if (analogRead(ventFeed) < ventMin + 8)
         sendXBee("Vent Closed");
       else
         sendXBee("Vent " + String(ventPercent()) + "% open");
@@ -175,6 +180,11 @@ void xBeeCommand() {
         eventlog.println("Remove time from failsafe  " + String(Com));
         int takenTime = Com + 100; //"addedTime" is now the amount of minutes to be subtracted
         cutTime += takenTime;
+      }
+
+      else if (Com / 1000 == 1) {
+        Com -= 1000;
+        cutAlt = Com * 1000;
       }
 
       else if (Com / 10000 == 2) { //Set a new duration for an AutoVent

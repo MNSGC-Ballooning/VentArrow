@@ -9,6 +9,9 @@ Code functions include XBee command support, a configurable failsafe cutdown tim
 ====================================================================================
 XBee Commands!
 ====================================================================================
+
+Identifier: VA
+
 COMMAND|              FUNCTION               | NOTES 
 
 -1     | Flight Start/Reset flight clock     | Sent at start of flight to signal start time. Resets flight clock with reuse
@@ -40,6 +43,8 @@ COMMAND|              FUNCTION               | NOTES
 1xxyy  | Open vent for xx min, yy sec		 | 5 digit input starting with 1. 2nd and 3rd are minutes, 4th and 5th are seconds
 
 1xx    | Add xx minutes to failsafe          | 3 digit input starting with 1. 2nd and 3rd are minutes
+
+1xxx   | Set auto cut to xxx,000ft			 | 4 digits starting with 1. 2-4 are thousands of feet
 
 -1xx   | Remove xx minutes from failsafe     | 3 digit input starting with -1. 2nd and 3rd are minutes
 
