@@ -26,11 +26,13 @@ void updateGPS() {
   }
   if (millis() - timer2 > xBeeRate) {
     timer2 = millis();
+    openDatalog();
     String message = String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",";
     message += String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + "," + String(GPS.altitude * 3.28048) + ",";
     if (GPS.fix) message += "Fix";
     else message += "No Fix";
     sendXBee(message);
+    closeDatalog();
   }
 }
 
@@ -42,16 +44,11 @@ boolean isBurst() {
   updateGPS();
   float alt1 = GPS.altitude;
   unsigned long t = millis();
-  byte counter = 0;
+  sendXBee("Checking for burst...");
   while (millis() - t < 10000) {
     updateGPS();
-    if ((millis() - t) / 1000 > counter) {
-      counter++;
-      sendXBee("Burst check in " + String(10 - counter));
-    }
   }
-  updateGPS();
-  if (alt1 - GPS.altitude > 300) {
+  if (alt1 - GPS.altitude > 100) {
     hasBurst = true;
     return true;
   }

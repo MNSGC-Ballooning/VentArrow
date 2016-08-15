@@ -27,6 +27,8 @@ COMMAND|              FUNCTION               | NOTES
 
 12     | Poll remaining failsafe time        | Returns time until auto cut in min:sec
 
+13	   | Poll for current GPS data			 | Forces a new GPS string to be sent
+
 20	   | Get list of AutoVent alts and times | Returns numbered list of planned AutoVents. Use # in commands for editing AutoVents
 
 42     | Initiate Cutdown					 | Extends the arrow for 10 seconds, then retracts automatically and checks for burst

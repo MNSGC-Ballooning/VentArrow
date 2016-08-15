@@ -105,6 +105,13 @@ void xBeeCommand() {
         sendXBee(timeLeftStr);
       } break;
 
+    case 13:
+      //Poll most recent GPS data
+      eventlog.println("Request GPS data  13");
+      timer2 = 0;   //forces a GPS message send on next updateGPS() call
+      updateGPS();
+      break;
+
     case 20:
       //Get a list of all current AutoVent times and altitudes. Number at front indicates digit to use
       eventlog.println("Get list of AutoVents  20");
