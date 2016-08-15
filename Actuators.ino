@@ -9,7 +9,7 @@ void openVent() {
   digitalWrite(ventOpen, HIGH);
   unsigned long t = millis();
   while (millis() - t < 8000) { //8 seconds is plenty on ground, but may be insufficient at altitude. Needs more testing
-    updateGPS();
+    updateSensors();
     delay(50);
   }
   digitalWrite(ventOpen, LOW);
@@ -33,7 +33,7 @@ void closeVent() {
   digitalWrite(ventClose, HIGH);
   unsigned long t = millis();
   while (millis() - t < 8000) {
-    updateGPS();
+    updateSensors();
     delay(50);
   }
   digitalWrite(ventClose, LOW);
@@ -62,7 +62,7 @@ void openForTime(int timeOpen) {  //opens vent for given number of seconds, then
   unsigned long t = millis();
   openVent();
   while (millis() - t < timeOpen) {
-    updateGPS();
+    updateSensors();
     xBeeCommand();
   }
   closeVent();
@@ -72,7 +72,7 @@ void calibrateVent() {  //fully opens and closes vent to reassign vent min/max v
   unsigned long t = millis();
   while (millis() - t < 10000) {
     digitalWrite(ventOpen, HIGH);
-    updateGPS();
+    updateSensors();
   }
   digitalWrite(ventOpen, LOW);
   ventMax = analogRead(ventFeed);
@@ -81,7 +81,7 @@ void calibrateVent() {  //fully opens and closes vent to reassign vent min/max v
   t = millis();
   while (millis() - t < 10000) {
     digitalWrite(ventClose, HIGH);
-    updateGPS();
+    updateSensors();
   }
   digitalWrite(ventClose, LOW);
   ventMin = analogRead(ventFeed) - 3;
@@ -95,7 +95,7 @@ void extendArrow() {
   digitalWrite(arrowExt, HIGH);
   unsigned long t = millis();
   while (millis() - t < 10000) {
-    updateGPS();
+    updateSensors();
     delay(50);
   }
   digitalWrite(arrowExt, LOW);
@@ -112,7 +112,7 @@ void retractArrow() {
   digitalWrite(arrowRet, HIGH);
   unsigned long t = millis();
   while (millis() - t < 10000) {
-    updateGPS();
+    updateSensors();
     delay(50);
   }
   digitalWrite(arrowRet, LOW);
@@ -127,7 +127,7 @@ void Legolas() {    //full arrow cutdown routine which, like the Hobbit movies,
   extendArrow();    //features an unneccessary appearance by everyone's favorite elf.
   unsigned long t = millis();
   while (millis() - t < 10000) {
-    updateGPS();
+    updateSensors();
     xBeeCommand();
   }
   retractArrow();

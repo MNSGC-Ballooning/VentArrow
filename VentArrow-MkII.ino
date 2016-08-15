@@ -35,6 +35,7 @@
 #define arrowRet 2
 #define arrowFeed A1
 #define chipSelect 10
+#define pressure A2
 
 class AutoVent { //Class for automatic venting events. Implementation is in Autopilot.ino
   private:
@@ -82,6 +83,7 @@ void setup() {
   pinMode(arrowRet, OUTPUT);
   pinMode(arrowFeed, INPUT);
   pinMode(chipSelect, OUTPUT);
+  pinMode(pressure, INPUT);
 
   digitalWrite(powerLED, HIGH); //turn on power LED at startup
 
@@ -123,7 +125,7 @@ void setup() {
     }
   }
   
-  String Header = "Flight Time, Lat, Long, Altitude, Date, Hour:Min:Sec";
+  String Header = "Flight Time, Lat, Long, Altitude (ft), Date, Hour:Min:Sec, Pressure (psia)";
   datalog.println(Header);  //set up datalog format
   closeDatalog();
 
@@ -131,7 +133,7 @@ void setup() {
   sendXBee("Awaiting Startup");
   
   while (true) { //Don't begin autopilot or full sensor logging until flight start command received
-    updateGPS();
+    updateSensors();
     xBeeCommand();
     if (!startup) break;
     delay(100);
@@ -141,7 +143,7 @@ void setup() {
 //============================================================================================================================
 
 void loop(){
-  updateGPS();
+  updateSensors();
   xBeeCommand();
   autopilot();
 }

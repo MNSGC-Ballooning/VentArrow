@@ -83,7 +83,7 @@ void xBeeCommand() {
     calibrateVent();
     sendXBee("Calibration complete");
   }
-    
+  
   else if (Com.equals("EXT")) {
     //Just extends the arrow. Pretty much just for GT
     logCommand(Com, "Extend Arrow");
@@ -134,7 +134,7 @@ void xBeeCommand() {
     //Poll most recent GPS data
     logCommand(Com, "Request GPS data");
     timer = 0;   //forces a GPS message send on next updateGPS() call
-    updateGPS();
+    updateSensors();
   }
 
   else if (Com.equals("LS")) {
@@ -149,14 +149,14 @@ void xBeeCommand() {
     //Poll most recent ascent rate
     logCommand(Com, "Poll ascent rate");
     if (lastRate == 0) {
-      updateGPS();
+      updateSensors();
       int alt1 = GPS.altitude, time1 = getGPStime();
       unsigned long t = millis();
       while (millis() - t < 10000) {
-        updateGPS();
+        updateSensors();
         xBeeCommand();
       }
-      updateGPS();
+      updateSensors();
       lastRate = (GPS.altitude - alt1) / (getGPStime() - time1);
     }
     sendXBee(String(lastRate) + "ft/s");
