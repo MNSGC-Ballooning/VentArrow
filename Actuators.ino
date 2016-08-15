@@ -46,7 +46,7 @@ void closeVent() {
 int ventPercent() {
   int pos = analogRead(ventFeed);
   pos -= ventMin;
-  return (pos * 100 / (1023 - ventMin));
+  return (pos * 100 / (ventMax - ventMin));
 }
 
 
@@ -68,13 +68,17 @@ void calibrateVent() {
     digitalWrite(ventOpen, HIGH);
     updateGPS();
   }
+  digitalWrite(ventOpen, LOW);
   ventMax = analogRead(ventFeed);
+  if (ventMax == 1023)
+    ventMax = 1024;
   t = millis();
   while (millis() - t < 10000) {
     digitalWrite(ventClose, HIGH);
     updateGPS();
   }
-  ventMax = analogRead(ventFeed);
+  digitalWrite(ventClose, LOW);
+  ventMin = analogRead(ventFeed);
   eventlog.println(flightTimeStr() + "  AC  New calibration: ventMin " + String(ventMin) + " ventMax " + String(ventMax));
 }
 
