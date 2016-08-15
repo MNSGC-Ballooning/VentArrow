@@ -46,7 +46,7 @@ class AutoVent {
     int rate1();
     int rate2();
     void autoCheck();
-    AutoVent(int alt, unsigned long vent);
+    AutoVent(int alt, int vent);
 };
 
 const String xBeeID = "VA";
