@@ -60,6 +60,13 @@ void xBeeCommand() {
       openVent();
       break;
 
+    case 2:
+      //Calibrate vent
+      eventlog.println("Calibrate Vent  2");
+      calibrateVent();
+      sendXBee("Calibration complete");
+      break;
+    
     case 4:
       //Just extends the arrow. Pretty much just for GT
       eventlog.println("Extend Arrow  4");

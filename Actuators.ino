@@ -3,12 +3,12 @@ void openVent() {
   digitalWrite(ventClose, LOW);
   digitalWrite(ventOpen, HIGH);
   unsigned long t = millis();
-  while (analogRead(ventFeed) < 1020 && millis() - t < 10000) {
+  while (analogRead(ventFeed) < ventMax && millis() - t < 10000) {
     updateGPS();
     delay(50);
   }
   digitalWrite(ventOpen, LOW);
-  if (analogRead(ventFeed) > 1015)
+  if (analogRead(ventFeed) > ventMax - 5)
     sendXBee("Vent Opened");
   else {
     sendXBee("Open Vent failed");
@@ -60,6 +60,22 @@ void openForTime(int timeOpen) {
     if (analogRead(ventFeed) < ventMin + 5) return;
   }
   closeVent();
+}
+
+void calibrateVent() {
+  unsigned long t = millis();
+  while (millis() - t < 10000) {
+    digitalWrite(ventOpen, HIGH);
+    updateGPS();
+  }
+  ventMax = analogRead(ventFeed);
+  t = millis();
+  while (millis() - t < 10000) {
+    digitalWrite(ventClose, HIGH);
+    updateGPS();
+  }
+  ventMax = analogRead(ventFeed);
+  eventlog.println(flightTimeStr() + "  AC  New calibration: ventMin " + String(ventMin) + " ventMax " + String(ventMax));
 }
 
 

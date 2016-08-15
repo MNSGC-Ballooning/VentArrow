@@ -17,6 +17,8 @@ COMMAND|              FUNCTION               | NOTES
 
 1      | Close Vent until further command    | Returns success/fail
 
+2	   | Calibrate Vent						 | Causes vent to open and close for feedback calibration. Results saved but not sent
+
 4      | Just extends cutdown arrow          | Returns success/fail. Intended for testing only
 
 5      | Just retracts cutdown arrow         | Returns success/fail
