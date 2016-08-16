@@ -1,5 +1,6 @@
 int gpsAlt;
 int lastRate = 0;
+boolean altCut = false;
 
 int AutoVent::rate1() {
   lastRate = (alts[1] - alts[0])/(times[1] - times[0]);
@@ -59,17 +60,21 @@ void autopilot() {
     autos[i].autoCheck();
   }
   
-  if (!hasBurst && gpsAlt > cutAlt) {
+  if (!hasBurst && gpsAlt > cutAlt && !altCut) {
     openEventlog();
     eventlog.println(flightTimeStr() + "  AC  Auto Cut - Altitude " + String(gpsAlt));
     sendXBee("Auto Cut - Altitude");
     Legolas();
-    while (!isBurst()){
+    while (!isBurst() && GPS.fix == true){
       sendXBee("Cutdown failed, reattempting now");
       Legolas();
     }
-    sendXBee("Cutdown Successful");
+    if (hasBurst)
+      sendXBee("Cutdown Successful");
+    else
+      sendXBee("No fix, confirmation of burst required");
     closeEventlog();
+    altCut = true;
   }
 
   if (!hasBurst && flightTime() > cutTime * 60000) {
@@ -77,11 +82,19 @@ void autopilot() {
     eventlog.println(flightTimeStr() + "  AC  Auto Cut - Time " + String(cutTime) + " minutes");
     sendXBee("Auto Cut - Time");
     Legolas();
-    while (!isBurst()){
+    while (!isBurst() && GPS.fix){
       sendXBee("Cutdown failed, reattempting now");
       Legolas();
     }
-    sendXBee("Cutdown Successful");
+    if (hasBurst)
+      sendXBee("Cutdown Successful");
+    else {
+      while (!hasBurst) {
+        isBurst();
+        sendXBee("No fix; reattempting cutdown until burst detected or confirmation sent");
+        Legolas();
+      }
+    }
     closeEventlog();
   }
 }

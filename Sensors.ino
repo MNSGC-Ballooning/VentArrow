@@ -41,17 +41,23 @@ int getGPStime() {    //returns GPS time as seconds since 0:00:00 UTC. Note that
 }
 
 boolean isBurst() {
+  sendXBee("Checking for burst...");
   updateGPS();
+  if (!GPS.fix){
+    sendXBee("No fix; burst unknown");
+    return false;
+  }
   float alt1 = GPS.altitude;
   unsigned long t = millis();
-  sendXBee("Checking for burst...");
   while (millis() - t < 10000) {
     updateGPS();
   }
-  if (alt1 - GPS.altitude > 100) {
+  if (alt1 - GPS.altitude > 100 && GPS.fix) {
     hasBurst = true;
     return true;
   }
-  else return false;
+  else if (!GPS.fix)
+    sendXBee("No fix; burst unknown");
+  return false;
 }
 
