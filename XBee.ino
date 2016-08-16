@@ -50,6 +50,7 @@ void xBeeCommand() {
 
     case -10:
       //debugging request for analogRead()
+      eventlog.println("Get ventFeed  -10");
       sendXBee(String(analogRead(ventFeed)));
       break;
     
@@ -162,6 +163,12 @@ void xBeeCommand() {
         sendXBee("Cutdown Successful");
       else
         sendXBee("Cutdown Failed");
+      break;
+
+    case 44:
+      //Set hasBurst to true; used to prevent automatic cutdown if burst has occured but not been detected
+      eventlog.println("Set hasBurst to true  44");
+      hasBurst = true;
       break;
 
     default:

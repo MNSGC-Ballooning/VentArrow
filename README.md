@@ -15,6 +15,8 @@ Identifier: VA
 COMMAND|              FUNCTION               | NOTES 
 
 -1     | Flight Start/Reset flight clock     | Sent at start of flight to signal start time. Resets flight clock with reuse
+
+-10	   | Poll raw ventFeed number			 | Returns the number of the current vent position from 0-1023 (actual minimum varies)
   
 0      | Open vent until further command     | Returns success/fail
 
@@ -39,6 +41,8 @@ COMMAND|              FUNCTION               | NOTES
 42     | Initiate Cutdown					 | Extends the arrow for 10 seconds, then retracts automatically and checks for burst
 
 43     | Check cutdown status                | Returns success/fail based on altitude change over last 10 seconds
+
+44	   | Set hasBurst to true				 | Send to tell system burst has occured if not detected automatically
 
 1xxyy  | Open vent for xx min, yy sec		 | 5 digit input starting with 1. 2nd and 3rd are minutes, 4th and 5th are seconds
 

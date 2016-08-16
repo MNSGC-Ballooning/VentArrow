@@ -69,10 +69,6 @@ unsigned long totalOpen = 0;
 unsigned long openTime;
 boolean hasBurst = false;
 
-int ventMin = 50;
-int ventMax = 1023;
-int arrowMin = 70;
-
 //============================================================================================================================
 
 void setup() {

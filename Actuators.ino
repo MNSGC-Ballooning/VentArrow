@@ -1,3 +1,7 @@
+int ventMin = 50;
+int ventMax = 1023;
+int arrowMin = 70;
+
 void openVent() {
   eventlog.println(flightTimeStr() + "  AC  Open Vent");
   digitalWrite(ventClose, LOW);
