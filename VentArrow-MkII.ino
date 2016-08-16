@@ -60,7 +60,7 @@ char datafile[13], eventfile[13];
 String filename = "VentAr";
 int cutTime = 120;        //Time in minutes after flight start to auto-cutdown
 int cutAlt = 90000;      //Altitude in ft to auto cutdown
-AutoVent autos[] = {AutoVent(0, 10), AutoVent(50, 60), AutoVent(70, 60)};
+AutoVent autos[] = {AutoVent(30, 60), AutoVent(50, 60), AutoVent(70, 60)};
 
 boolean startup = true;
 boolean ventIsOpen = false;

@@ -3,12 +3,12 @@ void openVent() {
   digitalWrite(ventClose, LOW);
   digitalWrite(ventOpen, HIGH);
   unsigned long t = millis();
-  while (analogRead(ventFeed) < ventMax && millis() - t < 10000) {
+  while (millis() - t < 8000) {
     updateGPS();
     delay(50);
   }
   digitalWrite(ventOpen, LOW);
-  Serial3.println(analogRead(ventFeed));
+  sendXBee("Vent at " + String(analogRead(ventFeed)));
   if (analogRead(ventFeed) > ventMax - 5)
     sendXBee("Vent Opened");
   else {
@@ -27,12 +27,12 @@ void closeVent() {
   digitalWrite(ventOpen, LOW);
   digitalWrite(ventClose, HIGH);
   unsigned long t = millis();
-  while (analogRead(ventFeed) > ventMin && millis() - t < 10000) {
+  while (millis() - t < 8000) {
     updateGPS();
     delay(50);
   }
   digitalWrite(ventClose, LOW);
-  Serial3.println(analogRead(ventFeed));
+  sendXBee("Vent at " + String(analogRead(ventFeed)));
   if (analogRead(ventFeed) < ventMin + 5)
     sendXBee("Vent Closed");
   else {
@@ -81,7 +81,7 @@ void calibrateVent() {
   }
   digitalWrite(ventClose, LOW);
   ventMin = analogRead(ventFeed) - 3;
-  Serial3.println("Min: " + String(ventMin) + " Max: " + String(ventMax));
+  sendXBee("Min: " + String(ventMin) + " Max: " + String(ventMax));
   eventlog.println(flightTimeStr() + "  AC  New calibration: ventMin " + String(ventMin) + " ventMax " + String(ventMax));
 }
 

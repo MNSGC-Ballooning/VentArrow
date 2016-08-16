@@ -17,7 +17,6 @@ void AutoVent::autoCheck() {
       if (gpsAlt > (targetAlt - 5000)) {
         alts[0] = gpsAlt;
         times[0] = getGPStime();
-        sendXBee("Reached 1");
         reached++;
       }
       break;
@@ -32,7 +31,6 @@ void AutoVent::autoCheck() {
         closeEventlog();
         alts[2] = gpsAlt;
         times[2] = getGPStime();
-        sendXBee("Reached 2");
         reached++;
       }
       break;
@@ -43,7 +41,6 @@ void AutoVent::autoCheck() {
         openEventlog();
         sendXBee("Ascent Rate: " + String(rate2()));
         closeEventlog();
-        sendXBee("Reached 3");
         reached++;
       }
       break;
