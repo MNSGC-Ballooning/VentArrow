@@ -1,4 +1,4 @@
-int ventMin = 50;
+int ventMin = 162;
 int ventMax = 1023;
 int arrowMin = 70;
 

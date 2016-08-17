@@ -14,44 +14,46 @@ Identifier: VA
 
 COMMAND|              FUNCTION               | NOTES 
 
--1     | Flight Start/Reset flight clock     | Sent at start of flight to signal start time. Resets flight clock with reuse
+FS     | Flight Start/Reset flight clock     | Sent at start of flight to signal start time. Resets flight clock with reuse
 
--10	   | Poll raw ventFeed number			 | Returns the number of the current vent position from 0-1023 (actual minimum varies)
+VF	   | Poll raw ventFeed number			 | Returns the number of the current vent position from 0-1023 (actual minimum varies)
   
-1      | Open vent until further command     | Returns success/fail
+OV     | Open vent until further command     | Returns success/fail
 
-2      | Close Vent until further command    | Returns success/fail
+CV     | Close Vent until further command    | Returns success/fail
 
-3	   | Calibrate Vent						 | Causes vent to open and close for feedback calibration. Results saved but not sent
+CAL	   | Calibrate Vent						 | Causes vent to open and close for feedback calibration. Results saved but not sent
 
-4      | Just extends cutdown arrow          | Returns success/fail. Intended for testing only
+EXT    | Just extends cutdown arrow          | Returns success/fail. Intended for testing only
 
-5      | Just retracts cutdown arrow         | Returns success/fail
+RET    | Just retracts cutdown arrow         | Returns success/fail
 
-10     | Poll vent status                    | Returns current vent state (Open/Closed)
+VS     | Poll vent status                    | Returns current vent state (Open/Closed)
 
-11     | Poll for total open time in minutes | Returns total time vent has been open in min:sec
+TO     | Poll for total open time in minutes | Returns total time vent has been open in min:sec
 
-12     | Poll remaining failsafe time        | Returns time until auto cut in min:sec
+TL     | Poll remaining failsafe time        | Returns time until auto cut in min:sec
 
-13	   | Poll for current GPS data			 | Forces a new GPS string to be sent
+GPS	   | Poll for current GPS data			 | Forces a new GPS string to be sent
 
-20	   | Get list of AutoVent alts and times | Returns numbered list of planned AutoVents. Use # in commands for editing AutoVents
+LS	   | Get list of AutoVent alts and times | Returns numbered list of planned AutoVents. Use # in commands for editing AutoVents
 
-42     | Initiate Cutdown					 | Extends the arrow for 10 seconds, then retracts automatically and checks for burst
+AR	   | Get most recent ascent rate		 | Returns the last ascent rate calculated in ft/s. Updates every AutoVent
 
-43     | Check cutdown status                | Returns success/fail based on altitude change over last 10 seconds
+ELF    | Initiate Cutdown					 | Extends the arrow for 10 seconds, then retracts automatically and checks for burst
 
-44	   | Set hasBurst to true				 | Send to tell system burst has occured if not detected automatically
+IBS    | Check cutdown status                | Returns success/fail based on altitude change over last 10 seconds
 
-1xxyy  | Open vent for xx min, yy sec		 | 5 digit input starting with 1. 2nd and 3rd are minutes, 4th and 5th are seconds
+HBS	   | Set hasBurst to true				 | Send to tell system burst has occured if not detected automatically
 
-1xx    | Add xx minutes to failsafe          | 3 digit input starting with 1. 2nd and 3rd are minutes
+OT*xyy | Open vent for *x min, yy sec		 | May contain any number of digits after OT, but hundreds digit and greater are minutes
 
-1xxx   | Set auto cut to xxx,000ft			 | 4 digits starting with 1. 2-4 are thousands of feet
+AT*x   | Add *x minutes to failsafe          | Adds time before attempting automatic cutdown. May contain any number of digits
 
--1xx   | Remove xx minutes from failsafe     | 3 digit input starting with -1. 2nd and 3rd are minutes
+RT*x   | Remove *x minutes from failsafe	 | Removes time until automatic cutdown. May contain any number of digits
 
-2xyzz  | Set time of y min, z sec for Auto x | 5 digits starting with 2. 2nd is # of AutoVent from Command 20, 3 is min, 4-5 sec
+AC*x   | Set auto cut to *x,000ft			 | Set altitude to automatically attempt cutdown. May contain any number of digits
 
-3xyyy  | Set target of yyy,000ft for Auto x	 | 5 digits starting with 3. 2nd is # of AutoVent from Command 20, 3-5 are 1,000s of ft
+AL#*xyy| Set Auto # time of x min, y sec	 | AutoVent to set time is # (from LS). May contain any number of digits, 100s + are min
+
+AA#*x  | Set target of *x,000ft for Auto x	 | AutoVent to set altitude is # (from LS). May contain any number of digits
