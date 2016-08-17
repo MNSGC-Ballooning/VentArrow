@@ -125,14 +125,13 @@ void setup() {
   
   String Header = "Flight Time, Lat, Long, Altitude, Date, Hour:Min:Sec";
   datalog.println(Header);  //set up datalog format
+  closeDatalog();
 
   sendXBee("Setup Complete");
   sendXBee("Awaiting Startup");
   
-  closeDatalog();
-  closeEventlog();
-  
   while (true) {
+    updateGPS();
     xBeeCommand();
     if (!startup) break;
     delay(100);

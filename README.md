@@ -18,11 +18,11 @@ COMMAND|              FUNCTION               | NOTES
 
 -10	   | Poll raw ventFeed number			 | Returns the number of the current vent position from 0-1023 (actual minimum varies)
   
-0      | Open vent until further command     | Returns success/fail
+1      | Open vent until further command     | Returns success/fail
 
-1      | Close Vent until further command    | Returns success/fail
+2      | Close Vent until further command    | Returns success/fail
 
-2	   | Calibrate Vent						 | Causes vent to open and close for feedback calibration. Results saved but not sent
+3	   | Calibrate Vent						 | Causes vent to open and close for feedback calibration. Results saved but not sent
 
 4      | Just extends cutdown arrow          | Returns success/fail. Intended for testing only
 

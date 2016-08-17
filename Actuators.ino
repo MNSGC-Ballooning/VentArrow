@@ -3,7 +3,7 @@ int ventMax = 1023;
 int arrowMin = 70;
 
 void openVent() {
-  eventlog.println(flightTimeStr() + "  AC  Open Vent");
+  logEvent("Open Vent");
   digitalWrite(ventClose, LOW);
   digitalWrite(ventOpen, HIGH);
   unsigned long t = millis();
@@ -27,7 +27,7 @@ void openVent() {
 
 
 void closeVent() {
-  eventlog.println(flightTimeStr() + "  AC  Close Vent");
+  logEvent("Close Vent");
   digitalWrite(ventOpen, LOW);
   digitalWrite(ventClose, HIGH);
   unsigned long t = millis();
@@ -85,12 +85,11 @@ void calibrateVent() {
   digitalWrite(ventClose, LOW);
   ventMin = analogRead(ventFeed) - 3;
   sendXBee("Min: " + String(ventMin) + " Max: " + String(ventMax));
-  eventlog.println(flightTimeStr() + "  AC  New calibration: ventMin " + String(ventMin) + " ventMax " + String(ventMax));
 }
 
 
 void extendArrow() {
-  eventlog.println(flightTimeStr() + "  AC  Extending Arrow");
+  logEvent("Extending Arrow");
   digitalWrite(arrowRet, LOW);
   digitalWrite(arrowExt, HIGH);
   unsigned long t = millis();
@@ -107,7 +106,7 @@ void extendArrow() {
 
 
 void retractArrow() {
-  eventlog.println(flightTimeStr() + "  AC  Retracting Arrow");
+  logEvent("Retracting Arrow");
   digitalWrite(arrowExt, LOW);
   digitalWrite(arrowRet, HIGH);
   unsigned long t = millis();

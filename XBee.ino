@@ -61,19 +61,19 @@ void xBeeCommand() {
       sendXBee(String(analogRead(ventFeed)));
       break;
     
-    case 0:
+    case 1:
       //Close vent indefinitely
       logCommand(Com, "Close Vent");
       closeVent();
       break;
     
-    case 1:
+    case 2:
       //Open Vent indefinitely
       logCommand(Com, "Open Vent");
       openVent();
       break;
 
-    case 2:
+    case 3:
       //Calibrate vent
       logCommand(Com, "Calibrate Vent");
       calibrateVent();
@@ -186,6 +186,7 @@ void xBeeCommand() {
         int t = (Com / 100 * 60) + (Com % 100);
         openForTime(t);
       }
+      
       else if (Com / 100 == 1) { //Add time in minutes to failsafe timer: 3 digits starting with 1; 2nd and third are minutes
           logCommand(Com, "Add time to failsafe");
           int addedTime = Com - 100; //"addedTime" is now the amount of minutes to be added
@@ -211,6 +212,7 @@ void xBeeCommand() {
         Com %= 1000;
         autos[autovent - 1].ventTime = (Com / 100 * 60) + (Com % 100);
       }
+      
       else if (Com / 10000 == 3) { //Set a new target altitude for an AutoVent
         logCommand(Com, "Set AutoVent target altitude");
         Com -= 30000;
