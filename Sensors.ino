@@ -1,18 +1,13 @@
-unsigned long timer1 = millis();
-unsigned long timer2 = timer1;
-int logRate = 1000;   //interval in millis between cycles of datalogging
+unsigned long timer = millis();
 int xBeeRate = 15000; //interval in millis between xBee GPS transmissions
 
 void updateGPS() {
   while (gpsSerial.available() > 0) {
     GPS.read();
-    if (GPS.newNMEAreceived()) {
-      GPS.parse(GPS.lastNMEA());
-      break;
-    }
   }
-  if (millis() - timer1 > logRate) {
-    timer1 = millis();
+  if (startup) return;    //Don't fill up file with pre-flight data
+  if (GPS.newNMEAreceived()) {
+    GPS.parse(GPS.lastNMEA());
     openDatalog();
     if (GPS.fix) {
       datalog.print(flightTimeStr() + "," + String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + ",");
@@ -24,15 +19,13 @@ void updateGPS() {
       datalog.println(flightTimeStr() + ",No fix");
     closeDatalog();
   }
-  if (millis() - timer2 > xBeeRate) {
-    timer2 = millis();
-    openDatalog();
+  if (millis() - timer > xBeeRate) {
+    timer = millis();
     String message = String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",";
     message += String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + "," + String(GPS.altitude * 3.28048) + ",";
     if (GPS.fix) message += "Fix";
     else message += "No Fix";
     sendXBee(message);
-    closeDatalog();
   }
 }
 

@@ -63,7 +63,6 @@ void openForTime(int timeOpen) {
   while (millis() - t < timeOpen) {
     updateGPS();
     xBeeCommand();
-    if (analogRead(ventFeed) < ventMin + 8) return;
   }
   closeVent();
 }

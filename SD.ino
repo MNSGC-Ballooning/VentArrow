@@ -34,3 +34,10 @@ void closeEventlog() {
       digitalWrite(dataLED, LOW);
   }
 }
+
+void logEvent(String event) {
+  openEventlog();
+  eventlog.println(flightTimeStr() + "  AC  " + event);
+  closeEventlog();
+}
+
