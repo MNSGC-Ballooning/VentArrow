@@ -93,7 +93,7 @@ void extendArrow() {
   digitalWrite(arrowRet, LOW);
   digitalWrite(arrowExt, HIGH);
   unsigned long t = millis();
-  while (analogRead(arrowFeed) < 1020 && millis() - t < 10000) {
+  while (millis() - t < 10000) {
     updateGPS();
     delay(50);
   }
@@ -110,7 +110,7 @@ void retractArrow() {
   digitalWrite(arrowExt, LOW);
   digitalWrite(arrowRet, HIGH);
   unsigned long t = millis();
-  while (analogRead(arrowFeed) > arrowMin && millis() - t < 10000) {
+  while (millis() - t < 10000) {
     updateGPS();
     delay(50);
   }
