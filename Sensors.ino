@@ -37,7 +37,7 @@ boolean isBurst() {
   sendXBee("Checking for burst...");
   updateGPS();
   if (!GPS.fix){
-    sendXBee("No fix; burst unknown");
+    sendXBee("No fix, burst unknown");
     return false;
   }
   float alt1 = GPS.altitude;
@@ -50,7 +50,7 @@ boolean isBurst() {
     return true;
   }
   else if (!GPS.fix)
-    sendXBee("No fix; burst unknown");
+    sendXBee("No fix, burst unknown");
   return false;
 }
 

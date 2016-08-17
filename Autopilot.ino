@@ -85,7 +85,7 @@ void autopilot() {
     else {
       while (!hasBurst) {
         isBurst();
-        sendXBee("No fix; reattempting cutdown until burst detected or confirmation sent");
+        sendXBee("No fix, reattempting cutdown until burst detected or confirmation sent");
         Legolas();
       }
     }
