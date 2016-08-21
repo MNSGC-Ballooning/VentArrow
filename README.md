@@ -46,6 +46,8 @@ IBS    | Check cutdown status                | Returns success/fail based on alt
 
 HBS	   | Set hasBurst to true				 | Send to tell system burst has occured if not detected automatically
 
+NBS	   | Set hasBurst to false				 | Send to reenable auto cut functionality if a false burst is detected/sent
+
 OT*xyy | Open vent for *x min, yy sec		 | May contain any number of digits after OT, but hundreds digit and greater are minutes
 
 AT*x   | Add *x minutes to failsafe          | Adds time before attempting automatic cutdown. May contain any number of digits
