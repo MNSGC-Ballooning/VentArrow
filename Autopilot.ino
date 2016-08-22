@@ -1,4 +1,5 @@
 int gpsAlt;
+int lastAlt;
 int lastRate = 0;
 boolean altCut = false;
 
@@ -13,6 +14,7 @@ int AutoVent::rate2() {
 }
 
 void AutoVent::autoCheck() {
+  if (gpsAlt - lastAlt > 100) return;
   switch (reached) {
     case 0:
       if (gpsAlt > (targetAlt - 5000)) {
@@ -30,6 +32,7 @@ void AutoVent::autoCheck() {
         openForTime(ventTime);
         alts[2] = gpsAlt;
         times[2] = getGPStime();
+        closeVent(); //An extra safeguard to make sure vent closes properly
         reached++;
       }
       break;
@@ -51,6 +54,7 @@ AutoVent::AutoVent(int alt, int vent) {
 }
 
 void autopilot() {
+  lastAlt = gpsAlt;
   gpsAlt = GPS.altitude * 3.28048;
   for (int i = 0; i < sizeof(autos) / sizeof(autos[0]); i++) {
     autos[i].autoCheck();

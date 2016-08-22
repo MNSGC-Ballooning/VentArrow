@@ -54,6 +54,8 @@ AT*x   | Add *x minutes to failsafe          | Adds time before attempting autom
 
 RT*x   | Remove *x minutes from failsafe	 | Removes time until automatic cutdown. May contain any number of digits
 
+ST*x   | Set failsafe timer to *x minutes	 | Sets a new cutdown timer relative to time sent. May contatin any number of digits
+
 AC*x   | Set auto cut to *x,000ft			 | Set altitude to automatically attempt cutdown. May contain any number of digits
 
 AL#*xyy| Set Auto # time of x min, y sec	 | AutoVent to set time is # (from LS). May contain any number of digits, 100s + are min

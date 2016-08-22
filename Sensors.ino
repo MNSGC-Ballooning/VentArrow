@@ -7,7 +7,9 @@ void updateGPS() {
   }
   if (startup) return;    //Don't fill up file with pre-flight data
   if (GPS.newNMEAreceived()) {
+    lastTime = getGPStime();
     GPS.parse(GPS.lastNMEA());
+    if (getGPStime() > lastTime);
     openDatalog();
     if (GPS.fix) {
       datalog.print(flightTimeStr() + "," + String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + ",");

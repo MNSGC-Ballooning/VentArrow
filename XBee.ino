@@ -222,6 +222,18 @@ void xBeeCommand() {
     sendXBee(timeLeftStr);
   }
 
+  else if ((Com.substring(0,2)).equals("ST")) {
+    //set time to cut relative to now
+    logCommand(Com, "Set new failsafe");
+    int newTime = (Com.substring(2, Com.length())).toInt();
+    cutTime = flightTime / 60000 + newTime;
+    int timeLeft = cutTime * 60 - (flightTime() / 1000);
+    String timeLeftStr = (String(timeLeft / 60) + ":");
+    timeLeft %= 60;
+    timeLeftStr += (String(timeLeft / 10) + String(timeLeft % 10));
+    sendXBee(timeLeftStr);
+  }
+  
   else if ((Com.substring(0,2)).equals("AC")) {
     //set new auto cut altitude
     logCommand(Com, "Set Auto Cut Altitude");
