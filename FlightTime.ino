@@ -1,7 +1,9 @@
+//returns milliseconds since last flight start command (or bootup)
 unsigned long flightTime() {
   return (millis() - flightStart);
 }
 
+//returns the above flight time as a usable string for print statements
 String flightTimeStr() {
   unsigned long t = flightTime() / 1000;
   String fTime = "";

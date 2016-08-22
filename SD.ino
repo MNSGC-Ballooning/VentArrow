@@ -1,6 +1,7 @@
 boolean datalogOpen = false;
 boolean eventlogOpen = false;
 
+//The following four functions handle both opening files and controlling the data indicator LED
 void openDatalog() {
   if (!datalogOpen) {
     datalog = SD.open(datafile, FILE_WRITE);
@@ -35,6 +36,7 @@ void closeEventlog() {
   }
 }
 
+//Takes a string describing any event that takes place and records it in the eventlog with a timestamp. 
 void logEvent(String event) {
   openEventlog();
   eventlog.println(flightTimeStr() + "  AC  " + event);

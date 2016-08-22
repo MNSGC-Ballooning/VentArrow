@@ -1,4 +1,5 @@
-int ventMin = 162;
+//Variables to store actuator value ranges
+int ventMin = 165;
 int ventMax = 1023;
 int arrowMin = 70;
 
@@ -7,7 +8,7 @@ void openVent() {
   digitalWrite(ventClose, LOW);
   digitalWrite(ventOpen, HIGH);
   unsigned long t = millis();
-  while (millis() - t < 8000) {
+  while (millis() - t < 8000) { //8 seconds is plenty on ground, but may be insufficient at altitude. Needs more testing
     updateGPS();
     delay(50);
   }
@@ -15,11 +16,11 @@ void openVent() {
   sendXBee("Vent at " + String(analogRead(ventFeed)));
   if (analogRead(ventFeed) > ventMax - 5)
     sendXBee("Vent Opened");
-  else {
+  else {                        //Attempts to calculate relative amount open based on above min/max values
     sendXBee("Open Vent failed");
     sendXBee("Vent " + String(ventPercent()) + "% open");
   }
-  if (!ventIsOpen) {
+  if (!ventIsOpen) {      //Used to track total time vent has been open during flight
     ventIsOpen = true;
     openTime = millis();
   }
@@ -56,7 +57,7 @@ int ventPercent() {
 }
 
 
-void openForTime(int timeOpen) {
+void openForTime(int timeOpen) {  //opens vent for given number of seconds, then closes automatically
   timeOpen *= 1000;
   unsigned long t = millis();
   openVent();
@@ -67,7 +68,7 @@ void openForTime(int timeOpen) {
   closeVent();
 }
 
-void calibrateVent() {
+void calibrateVent() {  //fully opens and closes vent to reassign vent min/max values. Use only on ground prior to flight
   unsigned long t = millis();
   while (millis() - t < 10000) {
     digitalWrite(ventOpen, HIGH);

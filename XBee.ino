@@ -1,3 +1,4 @@
+//Takes a string to send via xBee, and logs the transmission to the SD card with a timestamp
 void sendXBee(String out) {
   Serial3.println(xBeeID + ";" + out + "!");
   openEventlog();
@@ -5,12 +6,14 @@ void sendXBee(String out) {
   closeEventlog();
 }
 
+//Takes the string of the xBee command as well as a description and logs to the SD card with a timestamp
 void logCommand(String com, String command) {
   openEventlog();
   eventlog.println(flightTimeStr() + "  RX  " + com + "  " + command);
   closeEventlog();
 }
 
+//Current method of sending an acknowledgement via RFD
 void acknowledge() {
   Serial3.println(xBeeID + "\n");
 }
@@ -18,23 +21,24 @@ void acknowledge() {
 String lastCommand = "";
 unsigned long commandTime = 0;
 
+//Primary xBee function that looks for incoming messages, parses them, and executes the corresponding commands
 void xBeeCommand() {
   boolean complete = false;
   String command = "";
   char inChar;
-  while (Serial3.available() > 0) {
+  while (Serial3.available() > 0) { //read incoming characters, skipping whitespace
     inChar = (char)Serial3.read();
     if (inChar != ' ') {
       command += inChar;
-      if (inChar == '!') {
+      if (inChar == '!') { //'!' indicates end of a command
         complete = true;
         break;
       }
     }
     delay(10);
   }
-  if (!complete) return;
-  if (command.equals(lastCommand) && (millis() - commandTime < 30000)) return;
+  if (!complete) return; //ignore fragmented messages
+  if (command.equals(lastCommand) && (millis() - commandTime < 30000)) return; //ignores multiple transmissions of same command
   int split = command.indexOf('?');
   if (!(command.substring(0, split)).equals(xBeeID)) return;
   lastCommand = command;
@@ -226,7 +230,7 @@ void xBeeCommand() {
     //set time to cut relative to now
     logCommand(Com, "Set new failsafe");
     int newTime = (Com.substring(2, Com.length())).toInt();
-    cutTime = flightTime / 60000 + newTime;
+    cutTime = flightTime() / 60000 + newTime;
     int timeLeft = cutTime * 60 - (flightTime() / 1000);
     String timeLeftStr = (String(timeLeft / 60) + ":");
     timeLeft %= 60;

@@ -36,7 +36,7 @@
 #define arrowFeed A1
 #define chipSelect 10
 
-class AutoVent {
+class AutoVent { //Class for automatic venting events. Implementation is in Autopilot.ino
   private:
     int alts[4], times[4];
     byte reached;
@@ -52,7 +52,7 @@ class AutoVent {
 const String xBeeID = "VA";
 
 HardwareSerial gpsSerial = Serial1;
-Adafruit_GPS GPS(&gpsSerial);
+Adafruit_GPS GPS(&gpsSerial); //Constructor for GPS object
 
 File datalog, eventlog;
 char datafile[13], eventfile[13];
@@ -60,7 +60,7 @@ char datafile[13], eventfile[13];
 String filename = "VentAr";
 int cutTime = 120;        //Time in minutes after flight start to auto-cutdown
 int cutAlt = 900000;      //Altitude in ft to auto cutdown
-AutoVent autos[] = {AutoVent(50, 120), AutoVent(70, 120), AutoVent(999, 0)};
+AutoVent autos[] = {AutoVent(50, 120), AutoVent(70, 120), AutoVent(999, 0)}; //put any planned AutoVents here
 
 boolean startup = true;
 boolean ventIsOpen = false;
@@ -130,7 +130,7 @@ void setup() {
   sendXBee("Setup Complete");
   sendXBee("Awaiting Startup");
   
-  while (true) {
+  while (true) { //Don't begin autopilot or full sensor logging until flight start command received
     updateGPS();
     xBeeCommand();
     if (!startup) break;
