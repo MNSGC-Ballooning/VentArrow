@@ -12,7 +12,7 @@
      Component                    | Pins used             | Notes
 
      Adafruit Ultimate GPS        | D0-1 (RX/TX1)         | Red LED connects to fix pin on GPS
-     Series 2 xBee                | D7-8 (RX/TX3)         |
+     Series 1 xBee                | D7-8 (RX/TX3)         |
      Sparkfun SD Breakout         | D10-13 (CS,DO,DI,SCK1)|
      Power LED (Green)            | D6                    | Turns on at startup - off indicates loss of power or critical error
      Data LED (Yellow)            | D9                    | Flashes when writing to SD card
