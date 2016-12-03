@@ -54,10 +54,10 @@ const String xBeeID = "VA";
 HardwareSerial gpsSerial = Serial1;
 Adafruit_GPS GPS(&gpsSerial); //Constructor for GPS object
 
-File datalog, eventlog;
-char datafile[13], eventfile[13];
+File datalogA, datalogB, eventlogA, eventlogB;
+char datafileA[13], datafileB[13], eventfileA[13], eventfileB[13];
 
-String filename = "VentAr";
+String filename = "Vent";
 int cutTime = 120;        //Time in minutes after flight start to auto-cutdown
 int cutAlt = 900000;      //Altitude in ft to auto cutdown
 AutoVent autos[] = {AutoVent(50, 120), AutoVent(70, 120), AutoVent(999, 0)}; //put any planned AutoVents here
@@ -104,15 +104,17 @@ void setup() {
     }
   }
   for (int i = 0; i < 100; i++) {                 //check for existing files from previous runs of program...
-    (filename + String(i / 10) + String(i % 10) + ".csv").toCharArray(datafile, sizeof(datafile));
-    if (!SD.exists(datafile)) {                   //...and make sure a new file is opened each time
+    (filename + "A" + String(i / 10) + String(i % 10) + ".csv").toCharArray(datafileA, sizeof(datafileA));
+    if (!SD.exists(datafileA)) {                   //...and make sure a new file is opened each time
+      (filename + "B" + String(i / 10) + String(i % 10) + ".csv").toCharArray(datafileB, sizeof(datafileB));
       openDatalog();
-      (filename + String(i / 10) + String(i % 10) + ".txt").toCharArray(eventfile, sizeof(eventfile));
+      (filename + "A" + String(i / 10) + String(i % 10) + ".txt").toCharArray(eventfileA, sizeof(eventfileA));
+      (filename + "B" + String(i / 10) + String(i % 10) + ".txt").toCharArray(eventfileB, sizeof(eventfileB));
       openEventlog();
       break;
     }
   }
-  if (!datalog) {                   //both power and data LEDs will blink together if card is inserted but file fails to be created
+  if (!datalogA) {                   //both power and data LEDs will blink together if card is inserted but file fails to be created
     while (true) {
       digitalWrite(powerLED, HIGH);
       digitalWrite(dataLED, HIGH);
@@ -124,7 +126,8 @@ void setup() {
   }
   
   String Header = "Flight Time, Lat, Long, Altitude, Date, Hour:Min:Sec";
-  datalog.println(Header);  //set up datalog format
+  datalogA.println(Header);
+  datalogB.println(Header);    //set up datalog format
   closeDatalog();
 
   sendXBee("Setup Complete");

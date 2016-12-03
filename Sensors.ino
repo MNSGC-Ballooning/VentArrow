@@ -12,14 +12,17 @@ void updateGPS() {
     GPS.parse(GPS.lastNMEA());
     if (getGPStime() > lastTime) {
       openDatalog();
+      String data = "";
       if (GPS.fix) {
-        datalog.print(flightTimeStr() + "," + String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + ",");
-        datalog.print(String(GPS.altitude * 3.28048) + ",");    //convert meters to feet for datalogging
-        datalog.print(String(GPS.month) + "/" + String(GPS.day) + "/" + String(GPS.year) + ",");
-        datalog.println(String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",");
+        data += (flightTimeStr() + "," + String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + ",");
+        data += (String(GPS.altitude * 3.28048) + ",");    //convert meters to feet for datalogging
+        data += (String(GPS.month) + "/" + String(GPS.day) + "/" + String(GPS.year) + ",");
+        data += (String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",");
       }
       else
-        datalog.println(flightTimeStr() + ",No fix");
+        data += (flightTimeStr() + ",No fix");
+      datalogA.println(data);
+      datalogB.println(data);
       closeDatalog();
     }
   }

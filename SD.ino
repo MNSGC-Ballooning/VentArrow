@@ -4,7 +4,8 @@ boolean eventlogOpen = false;
 //The following four functions handle both opening files and controlling the data indicator LED
 void openDatalog() {
   if (!datalogOpen) {
-    datalog = SD.open(datafile, FILE_WRITE);
+    datalogA = SD.open(datafileA, FILE_WRITE);
+    datalogB = SD.open(datafileB, FILE_WRITE);
     datalogOpen = true;
     digitalWrite(dataLED, HIGH);
   }
@@ -12,7 +13,8 @@ void openDatalog() {
 
 void closeDatalog() {
   if (datalogOpen) {
-    datalog.close();
+    datalogA.close();
+    datalogB.close();
     datalogOpen = false;
     if (!eventlogOpen)
       digitalWrite(dataLED, LOW);
@@ -21,7 +23,8 @@ void closeDatalog() {
 
 void openEventlog() {
   if (!eventlogOpen) {
-    eventlog = SD.open(eventfile, FILE_WRITE);
+    eventlogA = SD.open(eventfileA, FILE_WRITE);
+    eventlogB = SD.open(eventfileB, FILE_WRITE);
     eventlogOpen = true;
     digitalWrite(dataLED, HIGH);
   }
@@ -29,7 +32,8 @@ void openEventlog() {
 
 void closeEventlog() {
   if (eventlogOpen) {
-    eventlog.close();
+    eventlogA.close();
+    eventlogB.close();
     eventlogOpen = false;
     if (!datalogOpen)
       digitalWrite(dataLED, LOW);
@@ -39,7 +43,8 @@ void closeEventlog() {
 //Takes a string describing any event that takes place and records it in the eventlog with a timestamp. 
 void logEvent(String event) {
   openEventlog();
-  eventlog.println(flightTimeStr() + "  AC  " + event);
+  eventlogA.println(flightTimeStr() + "  AC  " + event);
+  eventlogB.println(flightTimeStr() + "  AC  " + event);
   closeEventlog();
 }
 
