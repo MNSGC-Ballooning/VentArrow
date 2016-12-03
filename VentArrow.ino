@@ -125,7 +125,7 @@ void setup() {
     }
   }
   
-  String Header = "Flight Time, Lat, Long, Altitude (ft), Date, Hour:Min:Sec, Pressure (psia)";
+  String Header = "Flight Time, Lat, Long, Altitude (ft), Date, Hour:Min:Sec, Pressure (mbar)";
   datalog.println(Header);  //set up datalog format
   closeDatalog();
 
