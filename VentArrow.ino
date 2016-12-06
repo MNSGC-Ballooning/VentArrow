@@ -49,6 +49,15 @@ class AutoVent { //Class for automatic venting events. Implementation is in Auto
     AutoVent(int alt, int vent);
 };
 
+class Event {
+  private:
+    unsigned long startTime;
+    String action;
+  public:
+    checkTimer();
+    Event(String a, int t);
+}
+
 const String xBeeID = "VA";
 
 HardwareSerial gpsSerial = Serial1;
