@@ -25,7 +25,7 @@
 #include <SD.h>
 #include <Adafruit_GPS.h>
 #include <vector>
-namespace std {
+namespace std { //for whatever reason, std libraries aren't well supported on Teensy - this seems to clear up most errors
   void __throw_bad_alloc()
   {
     Serial.println("Unable to allocate memory");
@@ -63,14 +63,14 @@ class AutoVent { //Class for automatic venting events. Implementation is in Auto
     AutoVent(int alt, int vent);
 };
 
-class Event {
+class Action {
   private:
     unsigned long startTime;
     String action;
   public:
     boolean checkTimer();
-    boolean checkAction(String a);
-    Event(String a, int t);
+    String getAction();
+    Action(String a, int t);
 };
 
 const String xBeeID = "VA";
@@ -85,7 +85,7 @@ String filename = "Vent";
 int cutTime = 120;        //Time in minutes after flight start to auto-cutdown
 int cutAlt = 900000;      //Altitude in ft to auto cutdown
 AutoVent autos[] = {AutoVent(50, 120), AutoVent(70, 120), AutoVent(999, 0)}; //put any planned AutoVents here
-vector<Event> events;
+vector<Action> actions;
 
 boolean startup = true;
 boolean ventIsOpen = false;
@@ -97,7 +97,7 @@ boolean hasBurst = false;
 //============================================================================================================================
 
 void setup() {
-  events.reserve(10);
+  actions.reserve(10);
   
   //set up pin modes
   pinMode(powerLED, OUTPUT);

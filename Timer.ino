@@ -1,27 +1,29 @@
-Event::Event(String a, int t) {
+Action::Action(String a, int t) {
   startTime = millis() + t * 1000;
   action = a;
 }
 
-boolean Event::checkTimer() {
+boolean Action::checkTimer() {
   if (millis() > startTime) return true;
   else return false;
 }
 
-boolean Event::checkAction(String a) {
-  if (a.equals(action)) return true;
-  else return false;
+String Action::getAction() {
+  return action;
 }
 
-void checkEvents() {
-  for (vector<Event>::iterator it = events.begin(); it < events.end(); it++) {
+void checkActions() {
+  for (vector<Action>::iterator it = actions.begin(); it < actions.end(); it++) {
     if ((*it).checkTimer()) {
-      if ((*it).checkAction("stopVent")) stopVent();
-      else if ((*it).checkAction("openVent")) openVent();
-      else if ((*it).checkAction("closeVent")) closeVent();
+      String action = (*it).getAction();
+      if (action.equals("stopVent")) stopVent();
+      else if (action.equals("openVent")) openVent();
+      else if (action.equals("closeVent")) closeVent();
+      else if (action.equals("stopArrow")) stopArrow();
+      else if (action.equals("extendArrow")) extendArrow();
+      else if (action.equals("retractArrow")) retractArrow();
       it--;
-      events.erase(it + 1);
-      it++;
+      actions.erase(it + 1);
     }
   }
 }

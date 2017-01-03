@@ -41,7 +41,7 @@ void closeEventlog() {
 }
 
 //Takes a string describing any event that takes place and records it in the eventlog with a timestamp. 
-void logEvent(String event) {
+void logAction(String event) {
   openEventlog();
   eventlogA.println(flightTimeStr() + "  AC  " + event);
   eventlogB.println(flightTimeStr() + "  AC  " + event);

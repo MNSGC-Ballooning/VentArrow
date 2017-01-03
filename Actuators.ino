@@ -2,13 +2,16 @@
 int ventMin = 165;
 int ventMax = 1023;
 int arrowMin = 70;
+int ventTime = 8; //time in seconds to allow vent to open or close
+int arrowTime = 10; //time to allow arrow to extend or retract
 
 void openVent() {
-  logEvent("Open Vent");
+  logAction("Open Vent");
   digitalWrite(ventClose, LOW);
   digitalWrite(ventOpen, HIGH);
-  Event stopVent ("stopVent", 8); //8 seconds is plenty on ground, but may be insufficient at altitude. Needs more testing
-  events.push_back(stopVent);
+  removActions();
+  Action stopVent ("stopVent", ventTime); //8 seconds is plenty on ground, but may be insufficient at altitude. Needs more testing
+  actions.push_back(stopVent);
   if (!ventIsOpen) {      //Used to track total time vent has been open during flight
     ventIsOpen = true;
     openTime = millis();
@@ -16,16 +19,12 @@ void openVent() {
 }
 
 void closeVent() {
-  logEvent("Close Vent");
+  logAction("Close Vent");
   digitalWrite(ventOpen, LOW);
   digitalWrite(ventClose, HIGH);
-  unsigned long t = millis();
-  while (millis() - t < 8000) {
-    updateGPS();
-    delay(50);
-  }
-  sendXBee("Vent at " + String(analogRead(ventFeed)));
-  sendXBee("Vent " + String(ventPercent()) + "% open");
+  removActions();
+  Action stopVent ("stopVent", ventTime);
+  actions.push_back(stopVent);
   if (ventIsOpen) {
     ventIsOpen = false;
     totalOpen += millis() - openTime;
@@ -38,9 +37,15 @@ void stopVent() {
   sendXBee("Vent at " + String(analogRead(ventFeed)));
   //Attempts to calculate relative amount open based on above min/max values
   sendXBee("Vent " + String(ventPercent()) + "% open");
-  if (!ventIsOpen) {      //Used to track total time vent has been open during flight
-    ventIsOpen = true;
-    openTime = millis();
+}
+
+void removActions() {
+  for (vector<Action>::iterator it = actions.begin(); it < actions.end(); it++) {
+    String action = (*it).getAction();
+    if (action.equals("stopVent") || action.equals("openVent") || action.equals("closeVent")) {
+      it--;
+      actions.erase(it + 1);
+    }
   }
 }
 
@@ -52,19 +57,14 @@ int ventPercent() {
 
 
 void openForTime(int timeOpen) {  //opens vent for given number of seconds, then closes automatically
-  timeOpen *= 1000;
-  unsigned long t = millis();
   openVent();
-  while (millis() - t < timeOpen) {
-    updateGPS();
-    xBeeCommand();
-  }
-  closeVent();
+  Action closeVent ("closeVent", ventTime + timeOpen);
+  actions.push_back(closeVent);
 }
 
 void calibrateVent() {  //fully opens and closes vent to reassign vent min/max values. Use only on ground prior to flight
   unsigned long t = millis();
-  while (millis() - t < 10000) {
+  while (millis() - t < (ventTime + 2) * 1000) {
     digitalWrite(ventOpen, HIGH);
     updateGPS();
   }
@@ -73,7 +73,7 @@ void calibrateVent() {  //fully opens and closes vent to reassign vent min/max v
   if (ventMax == 1023)
     ventMax = 1024;
   t = millis();
-  while (millis() - t < 10000) {
+  while (millis() - t < (ventTime + 2) * 1000) {
     digitalWrite(ventClose, HIGH);
     updateGPS();
   }
@@ -84,38 +84,46 @@ void calibrateVent() {  //fully opens and closes vent to reassign vent min/max v
 
 
 void extendArrow() {
-  logEvent("Extending Arrow");
+  logAction("Extending Arrow");
   digitalWrite(arrowRet, LOW);
   digitalWrite(arrowExt, HIGH);
-  unsigned long t = millis();
-  while (millis() - t < 10000) {
-    updateGPS();
-    delay(50);
-  }
-  digitalWrite(arrowExt, LOW);
-  if (analogRead(arrowFeed) > 1015)
-    sendXBee("Arrow Extended");
-  else
-    sendXBee("Arrow Extend failed");
+  removeArrows();
+  Action stopArrow ("stopArrow", arrowTime);
+  actions.push_back(stopArrow);
 }
 
 
 void retractArrow() {
-  logEvent("Retracting Arrow");
+  logAction("Retracting Arrow");
   digitalWrite(arrowExt, LOW);
   digitalWrite(arrowRet, HIGH);
-  unsigned long t = millis();
-  while (millis() - t < 10000) {
-    updateGPS();
-    delay(50);
-  }
-  digitalWrite(arrowRet, LOW);
-  if (analogRead(arrowFeed) < arrowMin + 5)
-    sendXBee("Arrow Retracted");
-  else
-    sendXBee("Arrow Retract failed");
+  removeArrows();
+  Action stopArrow ("stopArrow", arrowTime);
+  actions.push_back(stopArrow);
 }
 
+void stopArrow() {
+  digitalWrite(arrowExt, LOW);
+  digitalWrite(arrowRet, LOW);
+  if (analogRead(arrowFeed) > 1015)
+    sendXBee("Arrow Extended");
+  else if (analogRead(arrowFeed) < arrowMin + 5)
+    sendXBee("Arrow Retracted");
+  else {
+    sendXBee("Arrow Actuation failed");
+    sendXBee("Arrow at " + String(analogRead(arrowFeed)));
+  }
+}
+
+void removeArrows() {
+  for (vector<Action>::iterator it = actions.begin(); it < actions.end(); it++) {
+    String action = (*it).getAction();
+    if (action.equals("stopArrow") || action.equals("extendArrow") || action.equals("retractArrow")) {
+      it--;
+      actions.erase(it + 1);
+    }
+  }
+}
 
 void Legolas() {    //full arrow cutdown routine which, like the Hobbit movies,
   extendArrow();    //features an unneccessary appearance by everyone's favorite elf.

@@ -68,7 +68,7 @@ void autopilot() {
   }
   
   if (!hasBurst && gpsAlt > cutAlt && !altCut) { //Check if automatic cut altitude has been reached
-    logEvent("Auto Cut - Altitude " + String(gpsAlt));
+    logAction("Auto Cut - Altitude " + String(gpsAlt));
     sendXBee("Auto Cut - Altitude");
     Legolas();
     while (!hasBurst && GPS.fix == true){ //reattempt cutdown if GPS lock exists and cutdown not detected
@@ -84,7 +84,7 @@ void autopilot() {
   }
 
   if (!hasBurst && flightTime() > cutTime * 60000) {    //Check if automatic cut time has occured
-    logEvent("Auto Cut - Time " + String(cutTime) + " minutes");
+    logAction("Auto Cut - Time " + String(cutTime) + " minutes");
     sendXBee("Auto Cut - Time");
     Legolas();
     while (!hasBurst && GPS.fix){
