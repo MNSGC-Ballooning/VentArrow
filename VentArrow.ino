@@ -24,6 +24,20 @@
 //Libraries
 #include <SD.h>
 #include <Adafruit_GPS.h>
+#include <vector>
+namespace std {
+  void __throw_bad_alloc()
+  {
+    Serial.println("Unable to allocate memory");
+  }
+
+  void __throw_length_error( char const*e )
+  {
+    Serial.print("Length Error :");
+    Serial.println(e);
+  }
+}
+using namespace std;
 
 //pin declarations
 #define powerLED 6
@@ -54,9 +68,10 @@ class Event {
     unsigned long startTime;
     String action;
   public:
-    checkTimer();
+    boolean checkTimer();
+    boolean checkAction(String a);
     Event(String a, int t);
-}
+};
 
 const String xBeeID = "VA";
 
@@ -70,6 +85,7 @@ String filename = "Vent";
 int cutTime = 120;        //Time in minutes after flight start to auto-cutdown
 int cutAlt = 900000;      //Altitude in ft to auto cutdown
 AutoVent autos[] = {AutoVent(50, 120), AutoVent(70, 120), AutoVent(999, 0)}; //put any planned AutoVents here
+vector<Event> events;
 
 boolean startup = true;
 boolean ventIsOpen = false;
@@ -81,6 +97,8 @@ boolean hasBurst = false;
 //============================================================================================================================
 
 void setup() {
+  events.reserve(10);
+  
   //set up pin modes
   pinMode(powerLED, OUTPUT);
   pinMode(dataLED, OUTPUT);

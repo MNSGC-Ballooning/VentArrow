@@ -7,25 +7,13 @@ void openVent() {
   logEvent("Open Vent");
   digitalWrite(ventClose, LOW);
   digitalWrite(ventOpen, HIGH);
-  unsigned long t = millis();
-  while (millis() - t < 8000) { //8 seconds is plenty on ground, but may be insufficient at altitude. Needs more testing
-    updateGPS();
-    delay(50);
-  }
-  digitalWrite(ventOpen, LOW);
-  sendXBee("Vent at " + String(analogRead(ventFeed)));
-  if (analogRead(ventFeed) > ventMax - 5)
-    sendXBee("Vent Opened");
-  else {                        //Attempts to calculate relative amount open based on above min/max values
-    sendXBee("Open Vent failed");
-    sendXBee("Vent " + String(ventPercent()) + "% open");
-  }
+  Event stopVent ("stopVent", 8); //8 seconds is plenty on ground, but may be insufficient at altitude. Needs more testing
+  events.push_back(stopVent);
   if (!ventIsOpen) {      //Used to track total time vent has been open during flight
     ventIsOpen = true;
     openTime = millis();
   }
 }
-
 
 void closeVent() {
   logEvent("Close Vent");
@@ -36,17 +24,23 @@ void closeVent() {
     updateGPS();
     delay(50);
   }
-  digitalWrite(ventClose, LOW);
   sendXBee("Vent at " + String(analogRead(ventFeed)));
-  if (analogRead(ventFeed) < ventMin + 5)
-    sendXBee("Vent Closed");
-  else {
-    sendXBee("Vent Close failed");
-    sendXBee("Vent " + String(ventPercent()) + "% open");
-  }
+  sendXBee("Vent " + String(ventPercent()) + "% open");
   if (ventIsOpen) {
     ventIsOpen = false;
     totalOpen += millis() - openTime;
+  }
+}
+
+void stopVent() {
+  digitalWrite(ventOpen, LOW);
+  digitalWrite(ventClose, LOW);
+  sendXBee("Vent at " + String(analogRead(ventFeed)));
+  //Attempts to calculate relative amount open based on above min/max values
+  sendXBee("Vent " + String(ventPercent()) + "% open");
+  if (!ventIsOpen) {      //Used to track total time vent has been open during flight
+    ventIsOpen = true;
+    openTime = millis();
   }
 }
 
