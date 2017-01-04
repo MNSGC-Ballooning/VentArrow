@@ -127,11 +127,7 @@ void removeArrows() {
 
 void Legolas() {    //full arrow cutdown routine which, like the Hobbit movies,
   extendArrow();    //features an unneccessary appearance by everyone's favorite elf.
-  unsigned long t = millis();
-  while (millis() - t < 10000) {
-    updateGPS();
-    xBeeCommand();
-  }
-  retractArrow();
+  Action retractArrow ("retractArrow", 10 + arrowTime);
+  actions.push_back(retractArrow);
 }
 

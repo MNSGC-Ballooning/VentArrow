@@ -56,10 +56,11 @@ class AutoVent { //Class for automatic venting events. Implementation is in Auto
     byte reached;
   public:
     int targetAlt;
-    int ventTime;
+    int ventingTime;
     int rate1();
     int rate2();
-    void autoCheck();
+    boolean autoCheck();
+    void newRate();
     AutoVent(int alt, int vent);
 };
 
@@ -163,6 +164,7 @@ void setup() {
   while (true) { //Don't begin autopilot or full sensor logging until flight start command received
     updateGPS();
     xBeeCommand();
+    checkActions();
     if (!startup) break;
     delay(100);
   }
@@ -174,5 +176,6 @@ void loop(){
   updateGPS();
   xBeeCommand();
   autopilot();
+  checkActions();
 }
 

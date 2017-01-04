@@ -143,7 +143,7 @@ void xBeeCommand() {
     //Get a list of all current AutoVent times and altitudes. Number at front indicates digit to use
     logCommand(Com, "Get list of AutoVents");
     for (int i = 0; i < sizeof(autos) / sizeof(autos[1]); i++) {
-      sendXBee(String(i+1) + ": " + String(autos[i].targetAlt) + "ft, " + String(autos[i].ventTime) + "sec");
+      sendXBee(String(i+1) + ": " + String(autos[i].targetAlt) + "ft, " + String(autos[i].ventingTime) + "sec");
     }
   }
 
@@ -253,7 +253,7 @@ void xBeeCommand() {
     logCommand(Com, "Set AutoVent time");
     int autovent = (Com.substring(2,3)).toInt();
     int t = (Com.substring(3, Com.length())).toInt();
-    autos[autovent - 1].ventTime = (t / 100 * 60) + (t % 100);
+    autos[autovent - 1].ventingTime = (t / 100 * 60) + (t % 100);
   }
       
   else if ((Com.substring(0,2)).equals("AA")) {

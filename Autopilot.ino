@@ -15,9 +15,24 @@ int AutoVent::rate2() {
   return lastRate;
 }
 
+void AutoVent::newRate() {
+  alts[2] = GPS.altitude * 3.28048;
+  times[2] = getGPStime();
+  closeVent(); //An extra safeguard to make sure vent closes properly
+  gpsAlt = GPS.altitude * 3.28048;
+  reached++;
+}
+
+void checkNewRate() {
+  for (int i = 0; i < sizeof(autos) / sizeof(autos[0]); i++) { //Check all AutoVents
+    if (autos[i].autoCheck())
+      autos[i].newRate();
+  }
+}
+
 //Primary AutoVent function. Checks current altitude, and if that altitude reaches various thresholds relative
 //to the target altitude, takes various actions.
-void AutoVent::autoCheck() {
+boolean AutoVent::autoCheck() {
   switch (reached) { //Ensures each phase of the AutoVent must be carried out in sequence
     case 0:          //First, save an altitude and time well before venting begins
       if (gpsAlt > (targetAlt - 5000)) {
@@ -32,15 +47,14 @@ void AutoVent::autoCheck() {
         times[1] = getGPStime();
         sendXBee("Ascent Rate: " + String(rate1())); //Report initial ascent rate
         sendXBee("Reached " + String(targetAlt) + "ft, venting for " + String(ventTime) + "s");
-        openForTime(ventTime);
-        alts[2] = GPS.altitude * 3.28048;
-        times[2] = getGPStime();    //save another set of altitude and time
-        closeVent(); //An extra safeguard to make sure vent closes properly
-        gpsAlt = GPS.altitude * 3.28048;
-        reached++;
+        openForTime(ventingTime);
+        Action checkNewRate ("checkNewRate", ventingTime + 2 * ventTime);
       }
       break;
-    case 2:         //Well after venting has stopped, save another altitude and time and report new ascent rate
+    case 2:
+      return true;
+      break;
+    case 3:         //Well after venting has stopped, save another altitude and time and report new ascent rate
       if (getGPStime() - times[2] > 5 * 60000) {
         alts[3] = gpsAlt;
         times[3] = getGPStime();
@@ -49,12 +63,13 @@ void AutoVent::autoCheck() {
       }
       break;
   }
+  return false;
 }
 
 //Constructor. Requires altitude in 1000s of feet, and time to vent in seconds
 AutoVent::AutoVent(int alt, int vent) {
   targetAlt = alt * 1000;
-  ventTime = vent;
+  ventingTime = vent;
   reached = 0;
 }
 
