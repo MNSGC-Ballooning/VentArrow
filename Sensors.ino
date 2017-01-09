@@ -1,5 +1,7 @@
 unsigned long timer = millis();
 int xBeeRate = 15000; //interval in millis between xBee GPS transmissions
+float checkAlt;
+
 
 //function to handle both retrieval of data from GPS module and recording it on the SD card
 void updateGPS() {
@@ -41,24 +43,30 @@ int getGPStime() {    //returns GPS time as seconds since 0:00:00 UTC. Note that
 }
 
 //Attempts to detect burst by looking at GPS altitude change over 10s. Sends xBee message if no fix
-boolean isBurst() {
+void startBurstCheck() {
   sendXBee("Checking for burst...");
-  updateGPS();
   if (!GPS.fix) {
     sendXBee("No fix, burst unknown");
-    return false;
+    checkBurst = false;
+    return;
   }
-  float alt1 = GPS.altitude;
-  unsigned long t = millis();
-  while (millis() - t < 10000) {
-    updateGPS();
+  else {
+    checkAlt = GPS.altitude;
+    Action burstCheck ("burstCheck", 10);
+    actions.push_back(burstCheck);
+    checkBurst = true;
   }
-  if (alt1 - GPS.altitude > 100 && GPS.fix) {
-    hasBurst = true;
-    return true;
-  }
-  else if (!GPS.fix)
+}
+
+void burstCheck() {
+  if (!GPS.fix)
     sendXBee("No fix, burst unknown");
-  return false;
+  else if (checkAlt - GPS.altitude > 100) {
+    hasBurst = true;
+    sendXBee("Burst detected");
+  }
+  else
+    sendXBee("No burst detected");
+  checkBurst = false;
 }
 

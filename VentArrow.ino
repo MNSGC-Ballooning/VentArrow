@@ -94,6 +94,7 @@ unsigned long flightStart = 0;
 unsigned long totalOpen = 0;
 unsigned long openTime;
 boolean hasBurst = false;
+boolean checkBurst = false;
 
 //============================================================================================================================
 
@@ -166,7 +167,6 @@ void setup() {
     xBeeCommand();
     checkActions();
     if (!startup) break;
-    delay(100);
   }
 }
 

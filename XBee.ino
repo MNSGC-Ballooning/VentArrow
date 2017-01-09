@@ -168,17 +168,17 @@ void xBeeCommand() {
     //Cutdown and check cutdown status
     logCommand(Com, "Initiate Cutdown");
     Legolas();
-    if (isBurst())
-      sendXBee("Cutdown Successful");
-    else
-      sendXBee("Cutdown Failed");
+    if (!checkBurst) {
+      Action startBurstCheck ("startBurstCheck", 10 + 2 * arrowTime);
+      actions.push_back(startBurstCheck);
+    }
   }
 
-  else if (Com.equals("IBS")) {
-    //Check cutdown status
+  else if (Com.equals("CBS")) {
+    //Check burst status
     if (Com == 43)
-      logCommand(Com, "Poll Cutdown");
-    if (isBurst())
+      logCommand(Com, "Check Burst");
+    if (hasBurst)
       sendXBee("Cutdown Successful");
     else
       sendXBee("Cutdown Failed");

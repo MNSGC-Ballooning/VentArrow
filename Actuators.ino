@@ -9,7 +9,7 @@ void openVent() {
   logAction("Open Vent");
   digitalWrite(ventClose, LOW);
   digitalWrite(ventOpen, HIGH);
-  removActions();
+  removeActions();
   Action stopVent ("stopVent", ventTime); //8 seconds is plenty on ground, but may be insufficient at altitude. Needs more testing
   actions.push_back(stopVent);
   if (!ventIsOpen) {      //Used to track total time vent has been open during flight
@@ -22,7 +22,7 @@ void closeVent() {
   logAction("Close Vent");
   digitalWrite(ventOpen, LOW);
   digitalWrite(ventClose, HIGH);
-  removActions();
+  removeActions();
   Action stopVent ("stopVent", ventTime);
   actions.push_back(stopVent);
   if (ventIsOpen) {
@@ -39,7 +39,7 @@ void stopVent() {
   sendXBee("Vent " + String(ventPercent()) + "% open");
 }
 
-void removActions() {
+void removeActions() {
   for (vector<Action>::iterator it = actions.begin(); it < actions.end(); it++) {
     String action = (*it).getAction();
     if (action.equals("stopVent") || action.equals("openVent") || action.equals("closeVent")) {

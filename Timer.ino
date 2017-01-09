@@ -22,6 +22,9 @@ void checkActions() {
       else if (action.equals("stopArrow")) stopArrow();
       else if (action.equals("extendArrow")) extendArrow();
       else if (action.equals("retractArrow")) retractArrow();
+      else if (action.equals("checkNewRate")) checkNewRate();
+      else if (action.equals("startBurstCheck")) startBurstCheck();
+      else if (action.equals("burstCheck")) burstCheck();
       it--;
       actions.erase(it + 1);
     }
