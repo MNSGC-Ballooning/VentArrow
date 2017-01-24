@@ -133,12 +133,12 @@ void setup() {
     }
   }
   for (int i = 0; i < 100; i++) {                 //check for existing files from previous runs of program...
-    (filename + "A" + String(i / 10) + String(i % 10) + ".csv").toCharArray(datafileA, sizeof(datafileA));
+    (filename + String(i / 10) + String(i % 10) + "A" + ".csv").toCharArray(datafileA, sizeof(datafileA));
     if (!SD.exists(datafileA)) {                   //...and make sure a new file is opened each time
-      (filename + "B" + String(i / 10) + String(i % 10) + ".csv").toCharArray(datafileB, sizeof(datafileB));
+      (filename + String(i / 10) + String(i % 10) + "B" + ".csv").toCharArray(datafileB, sizeof(datafileB));
       openDatalog();
-      (filename + "A" + String(i / 10) + String(i % 10) + ".txt").toCharArray(eventfileA, sizeof(eventfileA));
-      (filename + "B" + String(i / 10) + String(i % 10) + ".txt").toCharArray(eventfileB, sizeof(eventfileB));
+      (filename + String(i / 10) + String(i % 10) + "A" + ".txt").toCharArray(eventfileA, sizeof(eventfileA));
+      (filename + String(i / 10) + String(i % 10) + "B" + ".txt").toCharArray(eventfileB, sizeof(eventfileB));
       openEventlog();
       break;
     }
