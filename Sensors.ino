@@ -8,11 +8,14 @@ void updateGPS() {
   while (gpsSerial.available() > 0) {
     GPS.read();
   }
-  if (startup) return;    //Don't fill up file with pre-flight data
   if (GPS.newNMEAreceived()) {
     int lastTime = getGPStime();
     GPS.parse(GPS.lastNMEA());
-    if (getGPStime() > lastTime) {
+    if (!firstFix && GPS.fix) {
+      GPSstartTime = GPS.hour * 3600 + GPS.minute * 60 + GPS.seconds;
+      firstFix = true;
+    }
+    if (getGPStime() > lastTime && !startup) {
       openDatalog();
       String data = "";
       if (GPS.fix) {
@@ -28,7 +31,7 @@ void updateGPS() {
       closeDatalog();
     }
   }
-  if (millis() - timer > xBeeRate) { //every 15s, send current GPS data via xBee
+  if (millis() - timer > xBeeRate && !startup) { //every 15s, send current GPS data via xBee
     timer = millis();
     String message = String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",";
     message += String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + "," + String(GPS.altitude * 3.28048) + ",";
@@ -39,7 +42,14 @@ void updateGPS() {
 }
 
 int getGPStime() {    //returns GPS time as seconds since 0:00:00 UTC. Note that comparisons crossing that time will be inaccurate
-  return GPS.hour * 3600 + GPS.minute * 60 + GPS.seconds;
+  int currentTime = GPS.hour * 3600 + GPS.minute * 60 + GPS.seconds;
+  if (!newDay && currentTime < GPSstartTime) {
+    days++;
+    newDay = true;
+  }
+  else if (newDay && currentTime > GPSstartTime)
+    newDay = false;
+  return days * 86400 + GPS.hour * 3600 + GPS.minute * 60 + GPS.seconds;
 }
 
 //Attempts to detect burst by looking at GPS altitude change over 10s. Sends xBee message if no fix

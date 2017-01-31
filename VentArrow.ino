@@ -96,6 +96,11 @@ unsigned long openTime;
 boolean hasBurst = false;
 boolean checkBurst = false;
 
+int GPSstartTime;
+int days = 0;
+boolean newDay = false;
+boolean firstFix = false;
+
 //============================================================================================================================
 
 void setup() {
