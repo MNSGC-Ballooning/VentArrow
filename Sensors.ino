@@ -1,6 +1,7 @@
 unsigned long timer = millis();
 int xBeeRate = 15000; //interval in millis between xBee GPS transmissions
 float checkAlt;
+int lastGPS;
 
 
 //function to handle both retrieval of data from GPS module and recording it on the SD card
@@ -23,6 +24,7 @@ void updateGPS() {
         data += (String(GPS.altitude * 3.28048) + ",");    //convert meters to feet for datalogging
         data += (String(GPS.month) + "/" + String(GPS.day) + "/" + String(GPS.year) + ",");
         data += (String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",");
+        lastGPS = GPS.hour * 3600 + GPS.minute * 60 + GPS.seconds;
       }
       else
         data += (flightTimeStr() + ",No fix");
@@ -41,15 +43,14 @@ void updateGPS() {
   }
 }
 
-int getGPStime() {    //returns GPS time as seconds since 0:00:00 UTC. Note that comparisons crossing that time will be inaccurate
-  int currentTime = GPS.hour * 3600 + GPS.minute * 60 + GPS.seconds;
-  if (!newDay && currentTime < GPSstartTime) {
+int getGPStime() {    //returns time in seconds between last successful fix and initial fix. Used to match with altitude data
+  if (!newDay && lastGPS < GPSstartTime) {
     days++;
     newDay = true;
   }
-  else if (newDay && currentTime > GPSstartTime)
+  else if (newDay && lastGPS > GPSstartTime)
     newDay = false;
-  return days * 86400 + GPS.hour * 3600 + GPS.minute * 60 + GPS.seconds;
+  return days * 86400 + lastGPS;
 }
 
 //Attempts to detect burst by looking at GPS altitude change over 10s. Sends xBee message if no fix
