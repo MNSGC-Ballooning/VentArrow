@@ -1,3 +1,5 @@
+//time between xBee status updates
+int beaconRate = 15;
 //global variables needed across calls to autopilot()
 int gpsAlt;
 int gpsTime;
@@ -77,11 +79,14 @@ AutoVent::AutoVent(int alt, int vent) {
 
 //Primary autopilot function. Checks to see if altitude or time has triggered various events
 void autopilot() {
-  int newRate = (GPS.altitude - gpsAlt)/(getGPStime() - gpsTime);
-  if (newRate < 10) { //Throws out bad data that can fool system
+  if ((GPS.altitude - gpsAlt)/(getGPStime() - gpsTime) < 5) { //Throws out bad data that can fool system
     gpsAlt = GPS.altitude * 3.28048;
     gpsTime = getGPStime();
-    ascentRate = newRate;
+  }
+  if (!checkRate) {
+    Beacon* beacon = new Beacon(beaconRate);
+    actions.push_back(beacon);
+    checkRate = true;
   }
   for (int i = 0; i < sizeof(autos) / sizeof(autos[0]); i++) { //Check all AutoVents
     autos[i].autoCheck();

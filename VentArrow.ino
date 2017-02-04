@@ -138,7 +138,14 @@ class BurstCheck:public Action {
     BurstCheck(int t) : Action(t){}
 };
 
-
+class Beacon:public Action {
+  private:
+    float GPSalt;
+    int GPStime;
+  public:
+    void doAction();
+    Beacon(int t);
+};
 
 const String xBeeID = "VA";
 
@@ -161,6 +168,7 @@ unsigned long totalOpen = 0;
 unsigned long openTime;
 boolean hasBurst = false;
 boolean checkBurst = false;
+boolean checkRate = false;
 
 int GPSstartTime;
 int days = 0;

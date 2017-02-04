@@ -1,5 +1,3 @@
-unsigned long timer = millis();
-int xBeeRate = 15000; //interval in millis between xBee GPS transmissions
 float checkAlt;
 int lastGPS;
 
@@ -32,14 +30,6 @@ void updateGPS() {
       datalogB.println(data);
       closeDatalog();
     }
-  }
-  if (millis() - timer > xBeeRate && !startup) { //every 15s, send current GPS data via xBee
-    timer = millis();
-    String message = String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",";
-    message += String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + "," + String(GPS.altitude * 3.28048) + ",";
-    if (GPS.fix) message += "Fix";
-    else message += "No Fix";
-    sendXBee(message);
   }
 }
 

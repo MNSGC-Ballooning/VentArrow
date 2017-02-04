@@ -135,8 +135,12 @@ void xBeeCommand() {
   else if (Com.equals("GPS")) {
     //Poll most recent GPS data
     logCommand(Com, "Request GPS data");
-    timer = 0;   //forces a GPS message send on next updateGPS() call
     updateGPS();
+    String message = String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",";
+    message += String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + "," + String(GPS.altitude * 3.28048) + ",";
+    if (GPS.fix) message += "Fix";
+    else message += "No Fix";
+    sendXBee(message);
   }
 
   else if (Com.equals("LS")) {
