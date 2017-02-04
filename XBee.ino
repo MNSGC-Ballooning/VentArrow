@@ -168,8 +168,7 @@ void xBeeCommand() {
 
   else if (Com.equals("CBS")) {
     //Check burst status
-    if (Com == 43)
-      logCommand(Com, "Check Burst");
+    logCommand(Com, "Check Burst");
     if (hasBurst)
       sendXBee("Cutdown Successful");
     else

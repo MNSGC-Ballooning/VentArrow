@@ -54,6 +54,7 @@ void Beacon::doAction() {
   if (GPS.fix) message += "Fix";
   else message += "No Fix";
   sendXBee(message);
+  sendXBee(String(readPressure()) + " mbar, " + String(sensors.getTempC(thermometer)) + " C");
   sendXBee("Ascent rate: " + String(ascentRate) + " ft/s");
   checkRate = false;
 }

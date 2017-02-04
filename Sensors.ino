@@ -34,6 +34,7 @@ void updateSensors() {
         data += (String(GPS.altitude * 3.28048) + ",");    //convert meters to feet for datalogging
         data += (String(GPS.month) + "/" + String(GPS.day) + "/" + String(GPS.year) + ",");
         data += (String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",");
+        data += (String(readPressure()) + "," + String(sensors.getTempC(thermometer)));
         lastGPS = GPS.hour * 3600 + GPS.minute * 60 + GPS.seconds;
       }
       else
