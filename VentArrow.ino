@@ -166,6 +166,7 @@ boolean ventIsOpen = false;
 unsigned long flightStart = 0;
 unsigned long totalOpen = 0;
 unsigned long openTime;
+int ascentRate = 0;
 boolean hasBurst = false;
 boolean checkBurst = false;
 boolean checkRate = false;

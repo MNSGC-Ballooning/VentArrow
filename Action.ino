@@ -48,12 +48,13 @@ Beacon::Beacon(int t) : Action(t) {
 void Beacon::doAction() {
   int newAlt = GPS.altitude;
   int newTime = getGPStime();
+  ascentRate = (newAlt - GPSalt)/(newTime - GPStime)*3.28048;
   String message = String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",";
   message += String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + "," + String(GPS.altitude * 3.28048) + ",";
   if (GPS.fix) message += "Fix";
   else message += "No Fix";
   sendXBee(message);
-  sendXBee("Ascent rate: " + String((newAlt - GPSalt)/(newTime - GPStime)*3.28048) + " ft/s");
+  sendXBee("Ascent rate: " + String(ascentRate) + " ft/s");
   checkRate = false;
 }
 

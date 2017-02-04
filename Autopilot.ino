@@ -3,7 +3,6 @@ int beaconRate = 15;
 //global variables needed across calls to autopilot()
 int gpsAlt;
 int gpsTime;
-int ascentRate = 0;
 boolean altCut = false;
 boolean timeCut = false;
 
@@ -59,7 +58,7 @@ boolean AutoVent::autoCheck() {
       return true;
       break;
     case 3:         //Well after venting has stopped, save another altitude and time and report new ascent rate
-      if (getGPStime() - times[2] > 5 * 60000) {
+      if (getGPStime() - times[2] > 5 * 60) {
         alts[3] = gpsAlt;
         times[3] = gpsTime;
         sendXBee("Ascent Rate: " + String(rate2()));
