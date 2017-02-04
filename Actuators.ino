@@ -67,7 +67,7 @@ void calibrateVent() {  //fully opens and closes vent to reassign vent min/max v
   unsigned long t = millis();
   while (millis() - t < (ventTime + 2) * 1000) {
     digitalWrite(ventOpen, HIGH);
-    updateGPS();
+    updateSensors();
   }
   digitalWrite(ventOpen, LOW);
   ventMax = analogRead(ventFeed);
@@ -76,7 +76,7 @@ void calibrateVent() {  //fully opens and closes vent to reassign vent min/max v
   t = millis();
   while (millis() - t < (ventTime + 2) * 1000) {
     digitalWrite(ventClose, HIGH);
-    updateGPS();
+    updateSensors();
   }
   digitalWrite(ventClose, LOW);
   ventMin = analogRead(ventFeed) - 3;

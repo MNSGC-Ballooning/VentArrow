@@ -2,8 +2,20 @@ float checkAlt;
 int lastGPS;
 
 
-//function to handle both retrieval of data from GPS module and recording it on the SD card
-void updateGPS() {
+double zero = 2.5 * 3.3;
+double Vspan = 3.3 * .95;
+int Pmax = 10000;
+double Pmin = 1.6;
+
+double readPressure() {
+  double voltage = (double)analogRead(pressure) / 1023;
+  voltage -= zero;
+  return voltage / Vspan * (Pmax - Pmin) + Pmin;
+}
+
+//function to handle both retrieval of data from GPS module and sensors, as well as recording it on the SD card
+void updateSensors() {
+  sensors.requestTemperatures();
   while (gpsSerial.available() > 0) {
     GPS.read();
   }
