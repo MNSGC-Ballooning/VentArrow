@@ -14,6 +14,7 @@ double readPressure() {
 
 //function to handle both retrieval of data from GPS module and sensors, as well as recording it on the SD card
 void updateSensors() {
+  sensors.requestTemperatures();
   while (gpsSerial.available() > 0) {
     GPS.read();
   }
@@ -28,7 +29,6 @@ void updateSensors() {
         datalog.print(String(GPS.altitude * 3.28048) + ",");    //convert meters to feet for datalogging
         datalog.print(String(GPS.month) + "/" + String(GPS.day) + "/" + String(GPS.year) + ",");
         datalog.print(String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",");
-        datalog.println(String(readPressure()) + ",");
       }
       else
         datalog.println(flightTimeStr() + ",No fix");

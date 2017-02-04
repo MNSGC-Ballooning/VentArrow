@@ -24,10 +24,14 @@
 //Libraries
 #include <SD.h>
 #include <Adafruit_GPS.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
 //pin declarations
 #define powerLED 6
 #define dataLED 9
+#define blueLED1 18
+#define blueLED2 19
 #define ventOpen 5
 #define ventClose 4
 #define ventFeed A0
@@ -35,7 +39,13 @@
 #define arrowRet 2
 #define arrowFeed A1
 #define chipSelect 10
-#define pressure A2
+#define pressure A3
+#define tempBus 23
+
+//Initialize temp sensor
+OneWire oneWire (tempBus);
+DallasTemperature sensors (&oneWire);
+DeviceAddress thermometer;
 
 class AutoVent { //Class for automatic venting events. Implementation is in Autopilot.ino
   private:
@@ -87,10 +97,11 @@ void setup() {
 
   digitalWrite(powerLED, HIGH); //turn on power LED at startup
 
-  //begin all serial lines
+  //begin all data lines
   GPS.begin(9600);
   gpsSerial.begin(9600);
   Serial3.begin(9600);
+  sensors.begin();
 
   //GPS setup and config
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
@@ -124,8 +135,14 @@ void setup() {
       delay(500);
     }
   }
+
+  //temp sensor setup and config
+  if(!sensors.getAddress(thermometer, 0)) {
+    sendXBee("Unable to find temp sensor address");
+  }
+  sensors.setResolution(thermometer, 9);
   
-  String Header = "Flight Time, Lat, Long, Altitude (ft), Date, Hour:Min:Sec, Pressure (mbar)";
+  String Header = "Flight Time, Lat, Long, Altitude (ft), Date, Hour:Min:Sec, Pressure (mbar), Temp (C)";
   datalog.println(Header);  //set up datalog format
   closeDatalog();
 
