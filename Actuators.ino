@@ -57,6 +57,7 @@ int ventPercent() {
 
 
 void openForTime(int timeOpen) {  //opens vent for given number of seconds, then closes automatically
+  if (timeOpen == 0) return;
   openVent();
   Action closeVent ("closeVent", ventTime + timeOpen);
   actions.push_back(closeVent);
