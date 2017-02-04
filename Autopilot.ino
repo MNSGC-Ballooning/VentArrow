@@ -1,20 +1,18 @@
 //global variables needed across calls to autopilot()
 int gpsAlt;
 int gpsTime;
-int lastRate = 0;
+int ascentRate = 0;
 boolean altCut = false;
 boolean timeCut = false;
 
 
 //two rate calculation functions used solely for convenience later
 int AutoVent::rate1() {
-  lastRate = (alts[1] - alts[0])/(times[1] - times[0]);
-  return lastRate;
+  return (alts[1] - alts[0])/(times[1] - times[0]);
 }
 
 int AutoVent::rate2() {
-  lastRate = (alts[3] - alts[2])/(times[3] - times[2]);
-  return lastRate;
+  return (alts[3] - alts[2])/(times[3] - times[2]);
 }
 
 void AutoVent::newRate() {
@@ -50,8 +48,8 @@ boolean AutoVent::autoCheck() {
         sendXBee("Ascent Rate: " + String(rate1())); //Report initial ascent rate
         sendXBee("Reached " + String(targetAlt) + "ft, venting for " + String(ventTime) + "s");
         openForTime(ventingTime);
-        Action checkNewRate ("checkNewRate", ventingTime + 2 * ventTime);
-        actions.push_back(checkNewRate);
+        CheckRateAction* checkRate = new CheckRateAction(ventingTime + 2 * ventTime);
+        actions.push_back(checkRate);
         reached++;
       }
       break;
@@ -79,9 +77,12 @@ AutoVent::AutoVent(int alt, int vent) {
 
 //Primary autopilot function. Checks to see if altitude or time has triggered various events
 void autopilot() {
-  if ((GPS.altitude - gpsAlt)/(getGPStime() - gpsTime) > 10) return; //Throws out bad data that can fool system
-  gpsAlt = GPS.altitude * 3.28048;
-  gpsTime = getGPStime();
+  int newRate = (GPS.altitude - gpsAlt)/(getGPStime() - gpsTime);
+  if (newRate < 10) { //Throws out bad data that can fool system
+    gpsAlt = GPS.altitude * 3.28048;
+    gpsTime = getGPStime();
+    ascentRate = newRate;
+  }
   for (int i = 0; i < sizeof(autos) / sizeof(autos[0]); i++) { //Check all AutoVents
     autos[i].autoCheck();
   }
@@ -92,7 +93,7 @@ void autopilot() {
       sendXBee("Auto Cut - Altitude");
       if (!checkBurst) {
         Legolas();
-        Action startBurstCheck ("startBurstCheck", 10 + 2 * arrowTime);
+        StartBurstCheck* startBurstCheck = new StartBurstCheck(10 + 2 * arrowTime);
         actions.push_back(startBurstCheck);
         checkBurst = true;
       }
@@ -101,7 +102,7 @@ void autopilot() {
     else if (altCut && GPS.fix && !checkBurst) {
       sendXBee("Fix acquired, attempting altitude cut");
       Legolas();
-      Action startBurstCheck ("startBurstCheck", 10 + 2 * arrowTime);
+      StartBurstCheck* startBurstCheck = new StartBurstCheck(10 + 2 * arrowTime);
       actions.push_back(startBurstCheck);
       checkBurst = true;
     }
@@ -111,7 +112,7 @@ void autopilot() {
       sendXBee("Auto Cut - Time");
       if (!checkBurst) {
         Legolas();
-        Action startBurstCheck ("startBurstCheck", 10 + 2 * arrowTime);
+        StartBurstCheck* startBurstCheck = new StartBurstCheck(10 + 2 * arrowTime);
         actions.push_back(startBurstCheck);
         checkBurst = true;
       }
@@ -120,7 +121,7 @@ void autopilot() {
     else if (timeCut && !checkBurst) {
       sendXBee("Reattempting time cut");
       Legolas();
-      Action startBurstCheck ("startBurstCheck", 10 + 2 * arrowTime);
+      StartBurstCheck* startBurstCheck = new StartBurstCheck(10 + 2 * arrowTime);
       actions.push_back(startBurstCheck);
       checkBurst = true;
     }

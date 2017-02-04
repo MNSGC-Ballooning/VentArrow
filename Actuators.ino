@@ -9,8 +9,8 @@ void openVent() {
   logAction("Open Vent");
   digitalWrite(ventClose, LOW);
   digitalWrite(ventOpen, HIGH);
-  removeActions();
-  Action stopVent ("stopVent", ventTime); //8 seconds is plenty on ground, but may be insufficient at altitude. Needs more testing
+  removeVents();
+  StopVentAction* stopVent = new StopVentAction(ventTime); //8 seconds is plenty on ground, but may be insufficient at altitude. Needs more testing
   actions.push_back(stopVent);
   if (!ventIsOpen) {      //Used to track total time vent has been open during flight
     ventIsOpen = true;
@@ -22,8 +22,8 @@ void closeVent() {
   logAction("Close Vent");
   digitalWrite(ventOpen, LOW);
   digitalWrite(ventClose, HIGH);
-  removeActions();
-  Action stopVent ("stopVent", ventTime);
+  removeVents();
+  StopVentAction* stopVent = new StopVentAction(ventTime);
   actions.push_back(stopVent);
   if (ventIsOpen) {
     ventIsOpen = false;
@@ -39,10 +39,10 @@ void stopVent() {
   sendXBee("Vent " + String(ventPercent()) + "% open");
 }
 
-void removeActions() {
-  for (vector<Action>::iterator it = actions.begin(); it < actions.end(); it++) {
-    String action = (*it).getAction();
-    if (action.equals("stopVent") || action.equals("openVent") || action.equals("closeVent")) {
+void removeVents() {
+  for (vector<Action*>::iterator it = actions.begin(); it < actions.end(); it++) {
+    if ((*it)->isRemovedOn("vent")) {
+      delete *it;
       it--;
       actions.erase(it + 1);
     }
@@ -59,7 +59,7 @@ int ventPercent() {
 void openForTime(int timeOpen) {  //opens vent for given number of seconds, then closes automatically
   if (timeOpen == 0) return;
   openVent();
-  Action closeVent ("closeVent", ventTime + timeOpen);
+  CloseVentAction* closeVent = new CloseVentAction(ventTime + timeOpen);
   actions.push_back(closeVent);
 }
 
@@ -89,7 +89,7 @@ void extendArrow() {
   digitalWrite(arrowRet, LOW);
   digitalWrite(arrowExt, HIGH);
   removeArrows();
-  Action stopArrow ("stopArrow", arrowTime);
+  StopArrowAction* stopArrow = new StopArrowAction(arrowTime);
   actions.push_back(stopArrow);
 }
 
@@ -99,7 +99,7 @@ void retractArrow() {
   digitalWrite(arrowExt, LOW);
   digitalWrite(arrowRet, HIGH);
   removeArrows();
-  Action stopArrow ("stopArrow", arrowTime);
+  StopArrowAction* stopArrow = new StopArrowAction(arrowTime);
   actions.push_back(stopArrow);
 }
 
@@ -117,9 +117,9 @@ void stopArrow() {
 }
 
 void removeArrows() {
-  for (vector<Action>::iterator it = actions.begin(); it < actions.end(); it++) {
-    String action = (*it).getAction();
-    if (action.equals("stopArrow") || action.equals("extendArrow") || action.equals("retractArrow")) {
+  for (vector<Action*>::iterator it = actions.begin(); it < actions.end(); it++) {
+    if ((*it)->isRemovedOn("arrow")) {
+      delete *it;
       it--;
       actions.erase(it + 1);
     }
@@ -128,7 +128,7 @@ void removeArrows() {
 
 void Legolas() {    //full arrow cutdown routine which, like the Hobbit movies,
   extendArrow();    //features an unneccessary appearance by everyone's favorite elf.
-  Action retractArrow ("retractArrow", 10 + arrowTime);
+  RetractArrowAction* retractArrow = new RetractArrowAction(10 + arrowTime);
   actions.push_back(retractArrow);
 }
 

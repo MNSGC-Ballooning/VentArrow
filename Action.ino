@@ -1,30 +1,51 @@
-Action::Action(String a, int t) {
-  startTime = millis() + t * 1000;
-  action = a;
-}
-
-boolean Action::checkTimer() {
-  if (millis() > startTime) return true;
+void OpenVentAction::doAction() {openVent();}
+boolean OpenVentAction::isRemovedOn(String type) {
+  if (type.equals("vent")) return true;
   else return false;
 }
 
-String Action::getAction() {
-  return action;
+
+void CloseVentAction::doAction() {closeVent();}
+boolean CloseVentAction::isRemovedOn(String type) {
+  if (type.equals("vent")) return true;
+  else return false;
 }
 
+void StopVentAction::doAction() {stopVent();}
+boolean StopVentAction::isRemovedOn(String type) {
+  if (type.equals("vent")) return true;
+  else return false;
+}
+
+void ExtendArrowAction::doAction() {extendArrow();}
+boolean ExtendArrowAction::isRemovedOn(String type) {
+  if (type.equals("arrow")) return true;
+  else return false;
+}
+
+void RetractArrowAction::doAction() {retractArrow();}
+boolean RetractArrowAction::isRemovedOn(String type) {
+  if (type.equals("arrow")) return true;
+  else return false;
+}
+
+void StopArrowAction::doAction() {stopArrow();}
+boolean StopArrowAction::isRemovedOn(String type) {
+  if (type.equals("arrow")) return true;
+  else return false;
+}
+
+void CheckRateAction::doAction() {checkNewRate();}
+
+void StartBurstCheck::doAction() {startBurstCheck();}
+
+void BurstCheck::doAction() {burstCheck();}
+
 void checkActions() {
-  for (vector<Action>::iterator it = actions.begin(); it < actions.end(); it++) {
-    if ((*it).checkTimer()) {
-      String action = (*it).getAction();
-      if (action.equals("stopVent")) stopVent();
-      else if (action.equals("openVent")) openVent();
-      else if (action.equals("closeVent")) closeVent();
-      else if (action.equals("stopArrow")) stopArrow();
-      else if (action.equals("extendArrow")) extendArrow();
-      else if (action.equals("retractArrow")) retractArrow();
-      else if (action.equals("checkNewRate")) checkNewRate();
-      else if (action.equals("startBurstCheck")) startBurstCheck();
-      else if (action.equals("burstCheck")) burstCheck();
+  for (vector<Action*>::iterator it = actions.begin(); it < actions.end(); it++) {
+    if ((*it)->checkTimer()) {
+      (*it)->doAction();
+      delete *it;
       it--;
       actions.erase(it + 1);
     }

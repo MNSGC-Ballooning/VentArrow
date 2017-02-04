@@ -150,7 +150,7 @@ void xBeeCommand() {
   else if (Com.equals("AR")) {
     //Poll most recent ascent rate
     logCommand(Com, "Poll ascent rate");
-    if (lastRate == 0) {
+    if (ascentRate == 0) {
       updateGPS();
       int alt1 = GPS.altitude, time1 = getGPStime();
       unsigned long t = millis();
@@ -159,9 +159,9 @@ void xBeeCommand() {
         xBeeCommand();
       }
       updateGPS();
-      lastRate = (GPS.altitude - alt1) / (getGPStime() - time1);
+      ascentRate = (GPS.altitude - alt1) / (getGPStime() - time1);
     }
-    sendXBee(String(lastRate) + "ft/s");
+    sendXBee(String(ascentRate) + "ft/s");
   }
 
   else if (Com.equals("ELF")) {
@@ -169,7 +169,7 @@ void xBeeCommand() {
     logCommand(Com, "Initiate Cutdown");
     Legolas();
     if (!checkBurst) {
-      Action startBurstCheck ("startBurstCheck", 10 + 2 * arrowTime);
+      StartBurstCheck* startBurstCheck = new StartBurstCheck(10 + 2 * arrowTime);
       actions.push_back(startBurstCheck);
     }
   }

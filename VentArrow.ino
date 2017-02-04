@@ -64,15 +64,81 @@ class AutoVent { //Class for automatic venting events. Implementation is in Auto
     AutoVent(int alt, int vent);
 };
 
+//define Action class and subclasses used throughout code
 class Action {
-  private:
+  protected:
     unsigned long startTime;
-    String action;
   public:
-    boolean checkTimer();
-    String getAction();
-    Action(String a, int t);
+    boolean checkTimer() {
+      if (millis() > startTime) return true;
+      else return false;
+    }
+    virtual void doAction() {}
+    virtual boolean isRemovedOn(String type) {return false;}
+    Action(int t) {startTime = millis() + t * 1000;}
 };
+
+class OpenVentAction:public Action {
+  public:
+    void doAction();
+    boolean isRemovedOn(String type);
+    OpenVentAction(int t) : Action(t){}
+};
+
+class CloseVentAction:public Action {
+  public:
+    void doAction();
+    boolean isRemovedOn(String type);
+    CloseVentAction(int t) : Action(t){}
+};
+
+class StopVentAction:public Action {
+  public:
+    void doAction();
+    boolean isRemovedOn(String type);
+    StopVentAction(int t) : Action(t){}
+};
+
+class ExtendArrowAction:public Action {
+  public:
+    void doAction();
+    boolean isRemovedOn(String type);
+    ExtendArrowAction(int t) : Action(t){}
+};
+
+class RetractArrowAction:public Action {
+  public:
+    void doAction();
+    boolean isRemovedOn(String type);
+    RetractArrowAction(int t) : Action(t){}
+};
+
+class StopArrowAction:public Action {
+  public:
+    void doAction();
+    boolean isRemovedOn(String type);
+    StopArrowAction(int t) : Action(t){}
+};
+
+class CheckRateAction:public Action {
+  public:
+    void doAction();
+    CheckRateAction(int t) : Action(t){}
+};
+
+class StartBurstCheck:public Action {
+  public:
+    void doAction();
+    StartBurstCheck(int t) : Action(t){}
+};
+
+class BurstCheck:public Action {
+  public:
+    void doAction();
+    BurstCheck(int t) : Action(t){}
+};
+
+
 
 const String xBeeID = "VA";
 
@@ -86,7 +152,7 @@ String filename = "Vent";
 int cutTime = 120;        //Time in minutes after flight start to auto-cutdown
 int cutAlt = 900000;      //Altitude in ft to auto cutdown
 AutoVent autos[] = {AutoVent(50, 120), AutoVent(70, 120), AutoVent(999, 0)}; //put any planned AutoVents here
-vector<Action> actions;
+vector<Action*> actions;
 
 boolean startup = true;
 boolean ventIsOpen = false;

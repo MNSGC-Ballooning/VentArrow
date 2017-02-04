@@ -63,7 +63,7 @@ void startBurstCheck() {
   }
   else {
     checkAlt = GPS.altitude;
-    Action burstCheck ("burstCheck", 10);
+    BurstCheck* burstCheck = new BurstCheck(10);
     actions.push_back(burstCheck);
     checkBurst = true;
   }
