@@ -43,11 +43,11 @@ void BurstCheck::doAction() {burstCheck();}
 
 Beacon::Beacon(int t) : Action(t) {
   GPSalt = GPS.altitude;
-  GPStime = getGPStime();
+  GPStime = getLastGPS();
 }
 void Beacon::doAction() {
   int newAlt = GPS.altitude;
-  int newTime = getGPStime();
+  int newTime = getLastGPS();
   ascentRate = (newAlt - GPSalt)/(newTime - GPStime)*3.28048;
   String message = String(GPS.hour) + ":" + String(GPS.minute) + ":" + String(GPS.seconds) + ",";
   message += String(GPS.latitudeDegrees) + "," + String(GPS.longitudeDegrees) + "," + String(GPS.altitude * 3.28048) + ",";

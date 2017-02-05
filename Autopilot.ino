@@ -18,7 +18,7 @@ int AutoVent::rate2() {
 
 void AutoVent::newRate() {
   alts[2] = GPS.altitude * 3.28048;
-  times[2] = getGPStime();
+  times[2] = getLastGPS();
   closeVent(); //An extra safeguard to make sure vent closes properly
   gpsAlt = GPS.altitude * 3.28048;
   reached++;
@@ -58,7 +58,7 @@ boolean AutoVent::autoCheck() {
       return true;
       break;
     case 3:         //Well after venting has stopped, save another altitude and time and report new ascent rate
-      if (getGPStime() - times[2] > 5 * 60) {
+      if (getLastGPS() - times[2] > 5 * 60) {
         alts[3] = gpsAlt;
         times[3] = gpsTime;
         sendXBee("Ascent Rate: " + String(rate2()));
@@ -78,9 +78,9 @@ AutoVent::AutoVent(int alt, int vent) {
 
 //Primary autopilot function. Checks to see if altitude or time has triggered various events
 void autopilot() {
-  if ((GPS.altitude - gpsAlt)/(getGPStime() - gpsTime) < 5) { //Throws out bad data that can fool system
+  if ((GPS.altitude - gpsAlt)/(getLastGPS() - gpsTime) < 5) { //Throws out bad data that can fool system
     gpsAlt = GPS.altitude * 3.28048;
-    gpsTime = getGPStime();
+    gpsTime = getLastGPS();
   }
   if (!checkRate) {
     Beacon* beacon = new Beacon(beaconRate);

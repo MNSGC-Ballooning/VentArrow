@@ -253,7 +253,7 @@ void setup() {
   }
   sensors.setResolution(thermometer, 9);
   
-  String Header = "Flight Time, Lat, Long, Altitude (ft), Date, Hour:Min:Sec, Pressure (mbar), Temp (C)";
+  String Header = "Flight Time, Lat, Long, Altitude (ft), Date, Hour:Min:Sec, Fix, Pressure (mbar), Temp (C)";
   datalogA.println(Header);
   datalogB.println(Header);    //set up datalog format
   closeDatalog();
