@@ -37,7 +37,7 @@ void updateSensors() {
         lastGPS = GPS.hour * 3600 + GPS.minute * 60 + GPS.seconds;
       }
       else
-        data += ("No fix");
+        data += ("No fix,");
       data += (String(readPressure()) + "," + String(sensors.getTempC(thermometer)) + ",");
       datalogA.println(data);
       datalogB.println(data);
@@ -58,6 +58,11 @@ int getLastGPS() {    //returns time in seconds between last successful fix and 
   else if (newDay && lastGPS > GPSstartTime)
     newDay = false;
   return days * 86400 + lastGPS;
+}
+
+boolean IOCcheck() {
+  if (digitalRead(IOCsense)==LOW) return true;
+  else return false;
 }
 
 //Attempts to detect burst by looking at GPS altitude change over 10s. Sends xBee message if no fix

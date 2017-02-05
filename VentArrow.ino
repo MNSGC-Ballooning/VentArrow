@@ -55,6 +55,7 @@ using namespace std;
 #define chipSelect 10
 #define pressure A3
 #define tempBus 23
+#define IOCsense 20
 
 //Initialize temp sensor
 OneWire oneWire (tempBus);
@@ -79,15 +80,23 @@ class AutoVent { //Class for automatic venting events. Implementation is in Auto
 class Action {
   protected:
     unsigned long startTime;
+    unsigned long ID;
   public:
+    static unsigned long nextID;
     boolean checkTimer() {
       if (millis() > startTime) return true;
       else return false;
     }
+    unsigned long getID() {return ID;}
     virtual void doAction() {}
     virtual boolean isRemovedOn(String type) {return false;}
-    Action(int t) {startTime = millis() + t * 1000;}
+    Action(int t) {
+      startTime = millis() + t * 1000;
+      ID = nextID;
+      nextID++;
+    }
 };
+unsigned long Action::nextID = 1;
 
 class OpenVentAction:public Action {
   public:
@@ -203,6 +212,7 @@ void setup() {
   pinMode(arrowFeed, INPUT);
   pinMode(chipSelect, OUTPUT);
   pinMode(pressure, INPUT);
+  pinMode(IOCsense, INPUT_PULLUP);
 
   digitalWrite(powerLED, HIGH); //turn on power LED at startup
 

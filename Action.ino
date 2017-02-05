@@ -1,11 +1,11 @@
-void OpenVentAction::doAction() {openVent();}
+void OpenVentAction::doAction() {openVent(ID);}
 boolean OpenVentAction::isRemovedOn(String type) {
   if (type.equals("vent")) return true;
   else return false;
 }
 
 
-void CloseVentAction::doAction() {closeVent();}
+void CloseVentAction::doAction() {closeVent(ID);}
 boolean CloseVentAction::isRemovedOn(String type) {
   if (type.equals("vent")) return true;
   else return false;
@@ -17,13 +17,13 @@ boolean StopVentAction::isRemovedOn(String type) {
   else return false;
 }
 
-void ExtendArrowAction::doAction() {extendArrow();}
+void ExtendArrowAction::doAction() {extendArrow(ID);}
 boolean ExtendArrowAction::isRemovedOn(String type) {
   if (type.equals("arrow")) return true;
   else return false;
 }
 
-void RetractArrowAction::doAction() {retractArrow();}
+void RetractArrowAction::doAction() {retractArrow(ID);}
 boolean RetractArrowAction::isRemovedOn(String type) {
   if (type.equals("arrow")) return true;
   else return false;
