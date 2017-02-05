@@ -100,13 +100,9 @@ void xBeeCommand() {
 
   else if (Com.equals("VS")) {
     //Poll for vent status
-    logCommand(Com, "Poll Vent Status");
-    if (analogRead(ventFeed) > ventMax - 5)
-      sendXBee("Vent Open");
-    else if (analogRead(ventFeed) < ventMin + 8)
-      sendXBee("Vent Closed");
-    else
-      sendXBee("Vent " + String(ventPercent()) + "% open");
+    sendXBee("Vent " + String(ventPercent()) + "% open");
+    if(IOCcheck()) sendXBee("IOC vent closed");
+    else sendXBee("IOC vent open");
   }
 
   else if (Com.equals("TO")) {
@@ -166,13 +162,22 @@ void xBeeCommand() {
     }
   }
 
-  else if (Com.equals("CBS")) {
-    //Check burst status
-    logCommand(Com, "Check Burst");
+  else if (Com.equals("IBS")) {
+    //Poll system knowledge of burst
+    logCommand(Com, "Poll Burst");
     if (hasBurst)
       sendXBee("Cutdown Successful");
     else
       sendXBee("Cutdown Failed");
+  }
+
+  else if (Com.equals("CBS")) {
+    //Active check for burst
+    logCommand(Com, "Check Burst");
+    if (!checkBurst) {
+      StartBurstCheck* startBurstCheck = new StartBurstCheck(10 + 2 * arrowTime);
+      actions.push_back(startBurstCheck);
+    }
   }
 
   else if (Com.equals("HBS")) {
@@ -258,6 +263,6 @@ void xBeeCommand() {
   else {
     //If no recognizable command was received, inform ground station
     logCommand(Com, "Unknown Command");
-    sendXBee(String(Com) + "  Command Not Recognized");
+    sendXBee(String(Com) + ":  Command Not Recognized");
   }
 }

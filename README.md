@@ -28,7 +28,7 @@ EXT    | Just extends cutdown arrow          | Returns success/fail. Intended fo
 
 RET    | Just retracts cutdown arrow         | Returns success/fail
 
-VS     | Poll vent status                    | Returns current vent state (Open/Closed)
+VS     | Poll vent status                    | Returns current vent state as seen by feedback line and IOC
 
 TO     | Poll for total open time in minutes | Returns total time vent has been open in min:sec
 
@@ -38,17 +38,19 @@ GPS	   | Poll for current GPS data			 | Forces a new GPS string to be sent
 
 LS	   | Get list of AutoVent alts and times | Returns numbered list of planned AutoVents. Use # in commands for editing AutoVents
 
-AR	   | Get most recent ascent rate		 | Returns the last ascent rate calculated in ft/s. Updates every AutoVent
+AR	   | Get most recent ascent rate		 | Returns the last ascent rate calculated in ft/s. Updates with beacon transmit
 
 ELF    | Initiate Cutdown					 | Extends the arrow for 10 seconds, then retracts automatically and checks for burst
 
-IBS    | Check cutdown status                | Returns success/fail based on altitude change over last 10 seconds
+IBS    | Poll system evaluation of burst     | Returns whether system thinks burst was successful or not at last check
+
+CBS	   | Active check for burst				 | Has system examine GPS data for burst
 
 HBS	   | Set hasBurst to true				 | Send to tell system burst has occured if not detected automatically
 
 NBS	   | Set hasBurst to false				 | Send to reenable auto cut functionality if a false burst is detected/sent
 
-OT*xyy | Open vent for *x min, yy sec		 | May contain any number of digits after OT, but hundreds digit and greater are minutes
+OT*x   | Open vent for *x seconds			 | After *x seconds, closes vent again automatically. May contain any number of digits
 
 AT*x   | Add *x minutes to failsafe          | Adds time before attempting automatic cutdown. May contain any number of digits
 
@@ -58,6 +60,6 @@ ST*x   | Set failsafe timer to *x minutes	 | Sets a new cutdown timer relative t
 
 AC*x   | Set auto cut to *x,000ft			 | Set altitude to automatically attempt cutdown. May contain any number of digits
 
-AL#*xyy| Set Auto # time of x min, y sec	 | AutoVent to set time is # (from LS). May contain any number of digits, 100s + are min
+AL#*x  | Set Auto # time of *x seconds		 | AutoVent to set time is # (from LS). May contain any number of digits
 
 AA#*x  | Set target of *x,000ft for Auto x	 | AutoVent to set altitude is # (from LS). May contain any number of digits
