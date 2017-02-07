@@ -78,7 +78,7 @@ AutoVent::AutoVent(int alt, int vent) {
 
 //Primary autopilot function. Checks to see if altitude or time has triggered various events
 void autopilot() {
-  if ((GPS.altitude - gpsAlt)/(getLastGPS() - gpsTime) < 5) { //Throws out bad data that can fool system
+  if ((GPS.altitude - gpsAlt)/(getLastGPS() - gpsTime) < 10) { //Throws out bad data that can fool system
     gpsAlt = GPS.altitude * 3.28048;
     gpsTime = getLastGPS();
   }
